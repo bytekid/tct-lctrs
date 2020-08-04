@@ -26,9 +26,10 @@ def check(job):
   regex = re.compile(r'WORST_CASE\(\?,O\(([^\s]*)')
   match = re.search(regex, str(out))  
   if match != None:
-    complexity = match.group(1)[:-5]
+    g = match.group(1)
+    complexity = g[:-2]
     complexity_str = "O(" + complexity + ")"
-    print(fname + ": " + complexity_str)
+    print(fname + ": " + complexity_str + " '" + g + "'")
     degrees = {
       "1" : 0.,
       "log(n)" : .5,
