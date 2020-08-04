@@ -263,13 +263,15 @@ checkDecreasePattern ((lexpr, rexprs), p) rule_constr inner_complexity = do
     else do
       let
         redexpr = mkReductExpr p (trace (" (left,right) = (" ++ show lexpr ++ ", " ++ show rexpr ++ ")") rexpr)
-        weak_decrease = lsmt SMT..>= (arith2SMT redexpr)
-        cconstr = smt_rule_constr SMT..&& SMT.bnot weak_decrease
+        weak_decrease = lsmt SMT..>= (arith2SMT (trace ("redexpr " ++ (show redexpr)) redexpr))
+        cconstr = smt_rule_constr SMT..&& SMT.bnot (trace (show weak_decrease) weak_decrease)
+      --constr_sat <- isSAT (smt_rule_constr SMT..&& (lsmt SMT..>= SMT.zero))
+      constr_sat <- isSAT (smt_rule_constr)
+      may_be_neg <- isSAT (smt_rule_constr SMT..&& SMT.bnot (lsmt SMT..>= SMT.zero))
       -- rule constraint && no weak decrease: should be unsat, to obtain desired decrease
-      constr_sat <- isSAT (smt_rule_constr SMT..&& (lsmt SMT..>= SMT.zero))
       no_decr_unsat <- isSAT cconstr
       let
-        res = constr_sat && not no_decr_unsat
+        res = constr_sat && not no_decr_unsat && not may_be_neg
       return (trace ("  constr_sat " ++ show constr_sat ++ " not no_decr_unsat " ++ show (not no_decr_unsat)) res)
     ) (trace ("try pattern " ++ (name p) ++ " for " ++ show lexpr ++ ": " ++ show growth_ok) growth_ok) rexprs
   return (

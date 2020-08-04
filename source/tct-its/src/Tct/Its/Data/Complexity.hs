@@ -217,19 +217,23 @@ compose c@(NPoly p) m
   | P.degree p <= 0 = c -- constant
   | all (`elem` dpolys) (activeVariables c) = poly $ subst p
   | is_var p && M.member (var p) m = m M.! (var p)
+  | any (`elem` unks) (activeVariables c) = Unknown
   | otherwise                               = trace ("compose NPoly undefined " ++ show p ++ " vs " ++ show m) Unknown
   where
     polys   = [ (v,np) | (v, NPoly np) <- M.toAscList m ]
     dpolys = fst (unzip polys)
+    unks = [ v | (v, Unknown) <- M.toAscList m ]
     is_var p = case P.toView p of {[(c, [(x, d)])] | c == 1 && d == 1 -> True; _ -> False} 
     var p = fst (head (snd (head (P.toView p))))
     subst = \p -> P.substituteVariables p (M.fromAscList polys)
 compose c@(LogPoly x d p q) m 
   | all (`elem` dpolys) (activeVariables c) = logbound (subst x) d (subst p) (subst q)
+  | any (`elem` unks) (activeVariables c) = Unknown
   | otherwise                               = trace "compose LogPoly undefined" Unknown
   where
     polys   = [ (v,np) | (v, NPoly np) <- M.toAscList m ]
     lpolys   = [ (v,p) | (v, LogPoly x d p q) <- M.toAscList m ]
+    unks = [ v | (v, Unknown) <- M.toAscList m ]
     dpolys = fst (unzip polys)
     defined = dpolys ++ fst (unzip lpolys)
     subst_undef = Nothing `elem` (map (\v -> M.lookup v (M.fromAscList polys)) (activeVariables c))
