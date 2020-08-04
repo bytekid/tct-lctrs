@@ -63,9 +63,9 @@ def check(job):
       "n^4" : 4.,
     }
     degree = 666
-    for d in degrees:
+    for d in degrees.keys():
       if complexity.startswith(d):
-        degree = d
+        degree = degrees[d]
         break
 
     print(fname + ": " + complexity_str + " '" + str(degree) + "'")
