@@ -214,7 +214,7 @@ activeVariables (LogPoly x _ p q) = P.variables x ++ P.variables p ++ P.variable
 compose :: Complexity -> M.Map Var Complexity -> Complexity
 compose Unknown _ = Unknown
 compose c@(NPoly p) m 
-  | P.degree p <= 1 = c -- constant
+  | P.degree p <= 0 = c -- constant
   | all (`elem` dpolys) (activeVariables c) = poly $ subst p
   | is_var p && M.member (var p) m = m M.! (var p)
   | otherwise                               = trace ("compose NPoly undefined " ++ show p ++ " vs " ++ show m) Unknown

@@ -344,7 +344,7 @@ entscheide proc prob@Its
       { shape_  = shp
       , pint_   = PI.PolyInter pint
       , strict_ = map (\(i,r) -> (i,r, inst (lhs r), bigAdd $ map inst (rhs r))) strictList
-      , weak_   = map (\(i,r) -> (i,r, inst (lhs r), bigAdd $ map inst (rhs r))) weakList -- (trace ("success, weak are " ++ (show (length weakList)) ++ ", strict are " ++ (show strictrules)++ ", somerules are " ++ (show is) ++ ", wiith sb are " ++ (show (withSizebounds proc))) weakList)
+      , weak_   = map (\(i,r) -> (i,r, inst (lhs r), bigAdd $ map inst (rhs r))) weakList
       , times_  = IM.fromAscList $ M.toAscList times 
       , sbounds_ = if withSize then (\sb -> (domain prob, sb)) `fmap` sizebounds else Nothing}
       where
