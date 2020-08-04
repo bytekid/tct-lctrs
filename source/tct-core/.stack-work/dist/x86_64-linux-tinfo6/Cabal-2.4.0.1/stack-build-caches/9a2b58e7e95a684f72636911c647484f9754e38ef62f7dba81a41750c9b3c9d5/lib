@@ -1,108 +1,108 @@
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Common/SemiRing.hs:
-  hash: 9be21e7e5b75d43e290f1758dfbbfc7fa45f2c590f09565c9d496d344ff8c253
-  size: 1725
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Common/Options.hs:
-  hash: e4d73685e561a351638a622d9997e9d205cceb5346c914646b7e91478ade8e3f
-  size: 2928
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/Processor.hs:
-  hash: ffba8f85910d79f33b19a2e51a01d7c4aa3f98eb44d1f425f3e8b6068753e2df
-  size: 2204
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/TctM.hs:
-  hash: 7a0000e5c46e73650a669369296eb109387040e1810814227872854ec8e49b08
-  size: 4268
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/Types.hs:
-  hash: f0d71fb738b611981de753eeba9bcefa93d624d69b2b6abc846d79233485702a
-  size: 15129
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Processor/Empty.hs:
-  hash: 219bfbf2076134f621989fe568db23381586c15b42e4fd83a8283f0b648c7308
-  size: 1400
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Common/Pretty.hs:
-  hash: 4e5595f9e941b58aceac051bcd42c96038b885b242093aacce942fb565cde19d
-  size: 5031
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/Strategy.hs:
-  hash: 5989bf7403f4aeb61786e32805b2b07dec3499210ed7b56f7d39a088025f9f9a
-  size: 10660
-  modtime: 1591083042
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/Answer.hs:
-  hash: 29eb45a28b9270e84e848df8cbbf83db39c42b8796251383dfeac4b1b2c343f2
-  size: 5825
-  modtime: 1590742932
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Common/Xml.hs:
-  hash: 4e58d7cb2d8d26e13a1b852a755d4ccb7347fc4d3b012937e135655cb2d09a11
-  size: 2905
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/ProofTree.hs:
-  hash: 57930e27b5ae36a9e5e076d865b72c84f45ce2ec30547a97ccd97a7b676e995b
-  size: 5992
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Common/Parser.hs:
-  hash: b504e720f73d5eaccc9da58489185988a606609ea0ca23eea44aa1a429b3a8f9
-  size: 2593
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core.hs:
-  hash: 8723feb7ed860b109aca693f6bdc6d5a97180afa2f5ce85f03ec62b848c8c825
-  size: 1686
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/Certificate.hs:
-  hash: b0eb0570566bb62f470614a0b53679e6bdd3d5400759fe9f88cb390aa449a9dd
-  size: 9440
-  modtime: 1590676257
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Common/Error.hs:
-  hash: c7355f1616735e8e621f1ed6286e572e02e04004b28d07f772344a6205b7a738
-  size: 2430
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Common/Concurrent.hs:
-  hash: 93a29d7cb76960361197a4723b21a404b000499311a41b118d4e61407a67df30
-  size: 3876
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/Forks.hs:
-  hash: 6f59babce085846b0882ad92f89f963161a1784e725de4075bbd624c9d414f5f
-  size: 1274
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Processor/Assumption.hs:
-  hash: 6a42326aa530284b05b591eb3e3d8675ca4cee83aa8db1553ca502da84813054
-  size: 1031
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Main.hs:
-  hash: 76a8dca98f7c0b6abbf04ed591586e241fb1431954a67368919eb774fbf6219f
-  size: 11524
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Processor/Failing.hs:
-  hash: 781ba684a92803fa08203780c1a15c35bbb204270776827588934bdfa6d58ba1
-  size: 868
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/tct-core.cabal:
-  hash: 3dfecc7fb0bbb1366afc384605127cd67fc6e116aa63ad5b5c613d4310dc1fe0
-  size: 2156
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Parse.hs:
-  hash: 519c2262e8f41ee9ca0cecd16346206b592ad8fb0357e21421592edb64601a9e
-  size: 3709
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Processor/Transform.hs:
-  hash: 6b35b78805f2b2b7cb23311b391a7ed3ea63d69e8ea28c52774b4a5d51942a97
-  size: 2172
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Interactive.hs:
-  hash: a59a4d2ee354e71dcdf7a3df8b25733e5029961aab538dd9787876f4c177af2c
-  size: 12693
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data.hs:
-  hash: f28401c4ef9341163d651146476642073b2ea0cd6e6a6dc62a8e84c42703ac58
-  size: 514
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Data/Declaration.hs:
-  hash: 720020f77f769812534f19c3ab00761b1d65d9f4e1c8381c6bf55524d1aa9b7c
-  size: 8200
-  modtime: 1590511938
-/home/bytekid/tools/tct-bundle-3.3/source/tct-core/src/Tct/Core/Processor/MSum.hs:
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Processor/MSum.hs:
   hash: 6db0d620d59c48178a92063fb969a1f20e609dc715d268e0920f4b4910443b15
   size: 2700
-  modtime: 1590511938
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core.hs:
+  hash: 8723feb7ed860b109aca693f6bdc6d5a97180afa2f5ce85f03ec62b848c8c825
+  size: 1686
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/Declaration.hs:
+  hash: 720020f77f769812534f19c3ab00761b1d65d9f4e1c8381c6bf55524d1aa9b7c
+  size: 8200
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Processor/Empty.hs:
+  hash: 219bfbf2076134f621989fe568db23381586c15b42e4fd83a8283f0b648c7308
+  size: 1400
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Processor/Assumption.hs:
+  hash: 6a42326aa530284b05b591eb3e3d8675ca4cee83aa8db1553ca502da84813054
+  size: 1031
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/Forks.hs:
+  hash: 6f59babce085846b0882ad92f89f963161a1784e725de4075bbd624c9d414f5f
+  size: 1274
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/Strategy.hs:
+  hash: 5989bf7403f4aeb61786e32805b2b07dec3499210ed7b56f7d39a088025f9f9a
+  size: 10660
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Common/Pretty.hs:
+  hash: 4e5595f9e941b58aceac051bcd42c96038b885b242093aacce942fb565cde19d
+  size: 5031
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/TctM.hs:
+  hash: 7a0000e5c46e73650a669369296eb109387040e1810814227872854ec8e49b08
+  size: 4268
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/tct-core.cabal:
+  hash: 3dfecc7fb0bbb1366afc384605127cd67fc6e116aa63ad5b5c613d4310dc1fe0
+  size: 2156
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/Answer.hs:
+  hash: 29eb45a28b9270e84e848df8cbbf83db39c42b8796251383dfeac4b1b2c343f2
+  size: 5825
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Main.hs:
+  hash: 76a8dca98f7c0b6abbf04ed591586e241fb1431954a67368919eb774fbf6219f
+  size: 11524
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Interactive.hs:
+  hash: a59a4d2ee354e71dcdf7a3df8b25733e5029961aab538dd9787876f4c177af2c
+  size: 12693
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/ProofTree.hs:
+  hash: 57930e27b5ae36a9e5e076d865b72c84f45ce2ec30547a97ccd97a7b676e995b
+  size: 5992
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Processor/Transform.hs:
+  hash: 6b35b78805f2b2b7cb23311b391a7ed3ea63d69e8ea28c52774b4a5d51942a97
+  size: 2172
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Parse.hs:
+  hash: 519c2262e8f41ee9ca0cecd16346206b592ad8fb0357e21421592edb64601a9e
+  size: 3709
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Common/Error.hs:
+  hash: c7355f1616735e8e621f1ed6286e572e02e04004b28d07f772344a6205b7a738
+  size: 2430
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Common/SemiRing.hs:
+  hash: 9be21e7e5b75d43e290f1758dfbbfc7fa45f2c590f09565c9d496d344ff8c253
+  size: 1725
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/Certificate.hs:
+  hash: b0eb0570566bb62f470614a0b53679e6bdd3d5400759fe9f88cb390aa449a9dd
+  size: 9440
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/Types.hs:
+  hash: f0d71fb738b611981de753eeba9bcefa93d624d69b2b6abc846d79233485702a
+  size: 15129
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Common/Concurrent.hs:
+  hash: 93a29d7cb76960361197a4723b21a404b000499311a41b118d4e61407a67df30
+  size: 3876
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data/Processor.hs:
+  hash: ffba8f85910d79f33b19a2e51a01d7c4aa3f98eb44d1f425f3e8b6068753e2df
+  size: 2204
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Common/Xml.hs:
+  hash: 4e58d7cb2d8d26e13a1b852a755d4ccb7347fc4d3b012937e135655cb2d09a11
+  size: 2905
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Processor/Failing.hs:
+  hash: 781ba684a92803fa08203780c1a15c35bbb204270776827588934bdfa6d58ba1
+  size: 868
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Data.hs:
+  hash: f28401c4ef9341163d651146476642073b2ea0cd6e6a6dc62a8e84c42703ac58
+  size: 514
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Common/Parser.hs:
+  hash: b504e720f73d5eaccc9da58489185988a606609ea0ca23eea44aa1a429b3a8f9
+  size: 2593
+  modtime: 1596528129
+/home/bytekid/tools/tct-lctrs/source/tct-core/src/Tct/Core/Common/Options.hs:
+  hash: e4d73685e561a351638a622d9997e9d205cceb5346c914646b7e91478ade8e3f
+  size: 2928
+  modtime: 1596528129
