@@ -121,7 +121,7 @@ if __name__ == "__main__":
   jobs = []
   for subdir, dirs, files in os.walk(exampledir):
     for file in files:
-      if ".koat" in file:
+      if file[-5:] == ".koat":
         filepath = join(subdir, file)
         jobs.append({"problem":file, "path":filepath})
   
@@ -140,7 +140,7 @@ if __name__ == "__main__":
   #for j in jobs:
   #  results.append(check(j))
 
-  l = len(summary)
+  l = len(jobs)
   print("<!-- SUMMARY: ")
   for t in summary.keys():
     print("  %s: %d/%d solved (%d min)" % (t, summary[t]["solved"], l, summary[t]["min"]))
