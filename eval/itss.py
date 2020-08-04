@@ -69,7 +69,7 @@ def check(job):
         break
 
     print(fname + ": " + complexity_str + " '" + str(degree) + "'")
-    if complexity not in degrees:
+    if degree == 666:
       print("unknown '" + complexity + "'")
     job["degree"] = degree
   else:
