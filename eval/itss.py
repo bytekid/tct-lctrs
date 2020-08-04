@@ -62,7 +62,12 @@ def check(job):
       "n^3" : 3.,
       "n^4" : 4.,
     }
-    degree = degrees[complexity] if complexity in degrees else 666
+    degree = 666
+    for d in degrees:
+      if complexity.startswith(d):
+        degree = d
+        break
+
     print(fname + ": " + complexity_str + " '" + str(degree) + "'")
     if complexity not in degrees:
       print("unknown '" + complexity + "'")
