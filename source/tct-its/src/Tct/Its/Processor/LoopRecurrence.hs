@@ -264,7 +264,7 @@ checkDecreasePattern ((lexpr, rexprs), p) rule_constr inner_complexity = do
       let
         redexpr = mkReductExpr p (trace (" (left,right) = (" ++ show lexpr ++ ", " ++ show rexpr ++ ")") rexpr)
         weak_decrease = lsmt SMT..>= (arith2SMT (trace ("redexpr " ++ (show redexpr)) redexpr))
-        cconstr = smt_rule_constr SMT..&& SMT.bnot (trace (show weak_decrease) weak_decrease)
+        cconstr = smt_rule_constr SMT..&& SMT.bnot weak_decrease
       --constr_sat <- isSAT (smt_rule_constr SMT..&& (lsmt SMT..>= SMT.zero))
       constr_sat <- isSAT (smt_rule_constr)
       may_be_neg <- isSAT (smt_rule_constr SMT..&& SMT.bnot (lsmt SMT..>= SMT.zero))
