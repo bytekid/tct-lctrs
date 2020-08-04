@@ -96,7 +96,7 @@ def accumulate(jobs):
       print("<td>" + ("?" if degrees[tool] is None else str(degrees[tool])) + "</td>")
     print("</tr>")
 
-    m = min(degrees.values() + [10001])
+    m = min(list(degrees.values()) + [10001])
     for tool in tools:
       summary[tool]["solved"] += 0 if degrees[tool] is None else 1
       summary[tool]["min"] += 0 if degrees[tool] is None or degrees[tool] != m else 1

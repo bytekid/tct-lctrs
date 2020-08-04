@@ -88,6 +88,7 @@ import           Tct.Its.Data.Types
 import qualified Tct.Its.Data.Timebounds             as TB
 import qualified Tct.Its.Data.Sizebounds             as SB
 import qualified Tct.Its.Data.TransitionGraph        as TG
+import           Debug.Trace
 
 --- Instances --------------------------------------------------------------------------------------------------------
 poly :: PI.Shape -> ItsStrategy
@@ -343,7 +344,7 @@ entscheide proc prob@Its
       { shape_  = shp
       , pint_   = PI.PolyInter pint
       , strict_ = map (\(i,r) -> (i,r, inst (lhs r), bigAdd $ map inst (rhs r))) strictList
-      , weak_   = map (\(i,r) -> (i,r, inst (lhs r), bigAdd $ map inst (rhs r))) weakList
+      , weak_   = map (\(i,r) -> (i,r, inst (lhs r), bigAdd $ map inst (rhs r))) weakList -- (trace ("success, weak are " ++ (show (length weakList)) ++ ", strict are " ++ (show strictrules)++ ", somerules are " ++ (show is) ++ ", wiith sb are " ++ (show (withSizebounds proc))) weakList)
       , times_  = IM.fromAscList $ M.toAscList times 
       , sbounds_ = if withSize then (\sb -> (domain prob, sb)) `fmap` sizebounds else Nothing}
       where
