@@ -1,0 +1,56 @@
+name:          tct-common
+version:       3.3.0
+stability:     experimental
+author:
+  Martin Avanzini, Andreas Kochesser, Georg Moser, Michael Schaper, Maria Schett
+maintainer:
+  Martin Avanzini <martin.avanzini@uibk.ac.at>,
+  Michael Schaper <michael.schaper@student.uibk.ac.at>,
+license:       BSD3
+license-file:  LICENSE
+category:      Program Analysis
+synopsis:      A Complexity Analysis Framework
+description:
+  The Tyrolean Complexity Tool (TcT for short) is a tool for proving 
+  resource bounds for different formal systems. This package provides 
+  some common functionalities.
+build-type:    Simple
+cabal-version: >= 1.8
+
+source-repository head
+  type:     git
+  location: git://github.com/ComputationWithBoundedResources/tct-common
+
+library
+  hs-source-dirs:
+    src
+  exposed-modules:
+    Tct.Common.CeTA
+    Tct.Common.Graph
+    Tct.Common.Polynomial
+    Tct.Common.PolynomialInterpretation
+    Tct.Common.ProofCombinators
+    Tct.Common.Ring
+    Tct.Common.SMT
+  build-depends:
+    base           >= 4.7 && < 5,
+    bytestring,
+    containers,
+    fgl,
+    fgl-visualize,
+    mtl,
+    parsec,
+    temporary,
+
+    slogic      >= 0.3,
+    tct-core    >= 3.3
+  ghc-options:
+    -Wall -fno-warn-orphans -fno-spec-constr-count -rtsopts -with-rtsopts=-N
+  extensions: 
+    ConstraintKinds,
+    DataKinds,
+    DeriveDataTypeable,
+    FlexibleInstances,
+    GeneralizedNewtypeDeriving,
+    MultiParamTypeClasses
+

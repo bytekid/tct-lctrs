@@ -1,0 +1,102 @@
+Name:          tct-its
+Version:       3.3.0
+Author:
+  Georg Moser, Michael Schaper
+Maintainer:
+  Michael Schaper <michael.schaper@uibk.ac.at>,
+Category:      Program Analysis
+Stability:     Experimental
+License:       BSD3
+License-file:  LICENSE
+Homepage:      http://cl-informatik.uibk.ac.at/software/tct/
+Synopsis:      A Complexity Analyser for Integer Transition Systems
+Description:
+  The Tyrolean Complexity Tool (TcT for short) is a tool for proving 
+  resource bounds for different formal systems. This package provides 
+  techniques to analyse runtime- and sizebounds for integer transtions 
+  systems (ITS).
+Cabal-version: >= 1.8
+Build-type:    Simple
+
+source-repository head
+  type:     git
+  location: git://github.com/ComputationWithBoundedResources/tct-its
+
+Executable tct-its
+  main-is: 
+    Main.hs
+  hs-source-dirs:
+    tct-its
+  build-depends:
+    base,
+    tct-core,
+    tct-its == 3.3.*
+
+  extensions: 
+    ConstraintKinds,
+    DataKinds,
+    DeriveDataTypeable,
+    FlexibleInstances,
+    GeneralizedNewtypeDeriving,
+    MultiParamTypeClasses, 
+    TypeFamilies,
+    TypeOperators
+
+  ghc-options:
+    -Wall -threaded -fno-warn-orphans -fno-spec-constr-count -rtsopts -with-rtsopts=-N
+
+Library
+  hs-source-dirs:
+    src
+  exposed-modules:
+    Tct.Its
+    Tct.Its.Config
+    Tct.Its.Data.Bounds
+    Tct.Its.Data.Complexity
+    Tct.Its.Data.LocalSizebounds
+    Tct.Its.Data.Problem
+    Tct.Its.Data.ResultVariableGraph
+    Tct.Its.Data.Rule
+    Tct.Its.Data.Selector
+    Tct.Its.Data.Sizebounds
+    Tct.Its.Data.Timebounds
+    Tct.Its.Data.TransitionAbstraction
+    Tct.Its.Data.TransitionGraph
+    Tct.Its.Data.Types
+    Tct.Its.Processors
+    Tct.Its.Processor.Chaining
+    Tct.Its.Processor.Combine
+    Tct.Its.Processor.Empty
+    Tct.Its.Processor.LoopRecurrence
+    Tct.Its.Processor.PathAnalysis
+    Tct.Its.Processor.TransitionPredicateAbstraction
+    Tct.Its.Processor.PolyRank
+    Tct.Its.Processor.Simplification
+    Tct.Its.Processor.Sizebounds
+    Tct.Its.Strategies
+  build-depends:
+    containers,
+    mtl,
+    base,
+    fgl,
+    fgl-visualize,
+    parsec,
+
+    slogic >= 0.3,
+    tct-common >= 3.3,
+    tct-core >= 3.3
+    
+  ghc-options:
+    -Wall -fno-warn-orphans -fno-spec-constr-count
+    -- -Wall -O0 -fno-warn-orphans -fdefer-typed-holes
+  extensions: 
+    ConstraintKinds,
+    DataKinds,
+    DeriveDataTypeable,
+    FlexibleContexts,
+    FlexibleInstances,
+    GeneralizedNewtypeDeriving,
+    MultiParamTypeClasses, 
+    TypeFamilies,
+    TypeOperators
+

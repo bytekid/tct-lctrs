@@ -1,0 +1,87 @@
+name:          tct-core
+version:       3.3.0
+stability:     experimental
+author:
+  Martin Avanzini, Michael Schaper, Manuel Schneckenreither, Georg Moser, Andreas Kochesser, Maria Schett
+maintainer:
+  Martin Avanzini <martin.avanzini@uibk.ac.at>,
+  Michael Schaper <michael.schaper@student.uibk.ac.at>,
+license:       BSD3
+license-file:  LICENSE
+category:      Program Analysis
+synopsis:      A Complexity Analysis Framework
+description:
+  The Tyrolean Complexity Tool (TcT for short) is a tool for proving
+  resource bounds for different formal systems. This package provides
+  a general transformation framework.
+build-type:    Simple
+cabal-version: >= 1.8
+
+source-repository head
+  type:     git
+  location: git://github.com/ComputationWithBoundedResources/tct-core
+
+library
+  exposed-modules:
+    Tct.Core
+    Tct.Core.Common.Concurrent
+    Tct.Core.Common.Error
+    Tct.Core.Common.Options
+    Tct.Core.Common.Parser
+    Tct.Core.Common.Pretty
+    Tct.Core.Common.SemiRing
+    Tct.Core.Common.Xml
+    Tct.Core.Data
+    Tct.Core.Data.Answer
+    Tct.Core.Data.Certificate
+    Tct.Core.Data.Declaration
+    Tct.Core.Data.Forks
+    Tct.Core.Data.Processor
+    Tct.Core.Data.ProofTree
+    Tct.Core.Data.Strategy
+    Tct.Core.Data.TctM
+    Tct.Core.Data.Types
+    Tct.Core.Parse
+    Tct.Core.Interactive
+    Tct.Core.Main
+    Tct.Core.Processor.Assumption
+    Tct.Core.Processor.Empty
+    Tct.Core.Processor.Failing
+    Tct.Core.Processor.MSum
+    Tct.Core.Processor.Transform
+  build-depends:
+    base >=4.7 && <5,
+    ansi-wl-pprint,
+    async,
+    bytestring,
+    containers,
+    directory,
+    mtl,
+    old-time,
+    optparse-applicative,
+    parsec,
+    process,
+    temporary,
+    text,
+    hexpat
+
+  hs-source-dirs: src
+  ghc-options:
+    -Wall -Wcompat -fno-warn-orphans -fno-spec-constr-count -rtsopts -with-rtsopts=-N
+  extensions:
+    ConstraintKinds,
+    DataKinds,
+    DeriveFoldable,
+    DeriveFunctor,
+    DeriveTraversable,
+    FlexibleContexts,
+    FlexibleInstances,
+    GADTs,
+    GeneralizedNewtypeDeriving,
+    MultiParamTypeClasses,
+    PolyKinds,
+    StandaloneDeriving,
+    TypeFamilies,
+    TypeOperators,
+    TypeSynonymInstances
+

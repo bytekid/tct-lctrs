@@ -1,0 +1,151 @@
+name:          tct-trs
+version:       3.3.0
+stability:     experimental
+author:
+  Martin Avanzini, Michael Schaper, Andreas Kochesser, Georg Moser,  Maria Schett, Manuel Schneckenreither
+maintainer:
+  Martin Avanzini <martin.avanzini@uibk.ac.at>,
+  Michael Schaper <michael.schaper@student.uibk.ac.at>,
+license:       BSD3
+license-file:  LICENSE
+category:      Program Analysis
+synopsis:      A Complexity Framework for Term Rewrite Systems
+description:
+  The Tyrolean Complexity Tool (TcT for short) is a tool for proving
+  resource bounds for different formal systems. This package provides
+  techniques for proving upper bounds on the derivational and runtime
+  complexity of term rewriting systems automatically.
+build-type:    Simple
+cabal-version: >= 1.8
+
+source-repository head
+  type:     git
+  location: git://github.com/ComputationWithBoundedResources/tct-trs
+
+executable tct-trs
+  main-is:        Main.hs
+  hs-source-dirs: tct-trs
+  build-depends:  base >= 4.7 && <5, tct-core, tct-trs
+  extensions:     FlexibleInstances, MultiParamTypeClasses
+  ghc-options:
+    -Wall -threaded -fno-warn-orphans -fno-spec-constr-count -rtsopts -with-rtsopts=-N
+  extensions:
+    ConstraintKinds,
+    DataKinds,
+    DeriveFoldable,
+    DeriveFunctor,
+    DeriveTraversable,
+    FlexibleContexts,
+    FlexibleInstances,
+    GADTs,
+    GeneralizedNewtypeDeriving,
+    MultiParamTypeClasses,
+    TypeFamilies,
+    TypeOperators
+
+
+library
+  hs-source-dirs:
+    src
+  exposed-modules:
+    Tct.Trs
+    Tct.Trs.Config
+    Tct.Trs.Data
+    Tct.Trs.Data.Arguments
+    Tct.Trs.Data.CeTA
+    Tct.Trs.Data.ComplexityPair
+    Tct.Trs.Data.DependencyGraph
+    Tct.Trs.Data.Precedence
+    Tct.Trs.Data.Problem
+    Tct.Trs.Data.ProblemKind
+    Tct.Trs.Data.Rewriting
+    Tct.Trs.Data.Rules
+    Tct.Trs.Data.RuleSelector
+    Tct.Trs.Data.RuleSet
+    Tct.Trs.Data.Signature
+    Tct.Trs.Data.Symbol
+    Tct.Trs.Encoding.ArgumentFiltering
+    Tct.Trs.Encoding.Bounds.Automata
+    Tct.Trs.Encoding.Bounds.Violations
+    Tct.Trs.Encoding.Bounds.Violations.Find
+    Tct.Trs.Encoding.Bounds.Violations.Fix
+    Tct.Trs.Encoding.Interpretation
+    Tct.Trs.Encoding.Matrix.Matrix
+    Tct.Trs.Encoding.Matrix.MatrixInterpretation
+    Tct.Trs.Encoding.SafeMapping
+    Tct.Trs.Encoding.UsablePositions
+    Tct.Trs.Encoding.UsableRules
+    Tct.Trs.Interactive
+    Tct.Trs.Processor.AmortisedAnalysis
+    Tct.Trs.Processor.CheckProperty
+    Tct.Trs.Processor.Bounds
+    Tct.Trs.Processor.ComplexityPair
+    Tct.Trs.Processor.Decompose
+    Tct.Trs.Processor.DecreasingLoops
+    Tct.Trs.Processor.DP.DependencyPairs
+    Tct.Trs.Processor.DP.DPGraph.DecomposeDG
+    Tct.Trs.Processor.DP.DPGraph.PathAnalysis
+    Tct.Trs.Processor.DP.DPGraph.PredecessorEstimation
+    Tct.Trs.Processor.DP.DPGraph.RemoveHeads
+    Tct.Trs.Processor.DP.DPGraph.RemoveInapplicable
+    Tct.Trs.Processor.DP.DPGraph.RemoveWeakSuffixes
+    Tct.Trs.Processor.DP.DPGraph.SimplifyRHS
+    Tct.Trs.Processor.DP.DPGraph.Trivial
+    Tct.Trs.Processor.DP.UsableRules
+    Tct.Trs.Processor.Empty
+    Tct.Trs.Processor.EpoStar
+    Tct.Trs.Processor.InnermostRuleRemoval
+    Tct.Trs.Processor.Matrix.NaturalMI
+    Tct.Trs.Processor.Matrix.MI
+    Tct.Trs.Processor.Poly.NaturalPI
+    Tct.Trs.Processors
+    Tct.Trs.Processor.ToInnermost
+    Tct.Trs.Processor.WithCertification
+    Tct.Trs.Strategies
+    Tct.Trs.Strategy.Certify
+    Tct.Trs.Strategy.Competition
+    Tct.Trs.Strategy.Derivational
+    Tct.Trs.Strategy.Runtime
+    Tct.Trs.Strategy.Web
+  build-depends:
+    base >= 4.7 && <5,
+    array,
+    bytestring,
+    containers,
+    fgl,
+    filepath,
+    mtl,
+    parsec,
+    process,
+    temporary,
+    vector,
+
+    term-rewriting,
+    term-rewriting-xml,
+
+    tct-core  >= 3.3,
+    slogic >= 0.3,
+    tct-common >= 3.3,
+
+    -- ARA stuff
+    ara,
+    term-rewriting-ext,
+    pretty
+
+
+  ghc-options:
+    -Wall -fno-warn-orphans -fno-spec-constr-count
+  extensions:
+    ConstraintKinds,
+    DataKinds,
+    DeriveFoldable,
+    DeriveFunctor,
+    DeriveTraversable,
+    FlexibleContexts,
+    FlexibleInstances,
+    GADTs,
+    GeneralizedNewtypeDeriving,
+    MultiParamTypeClasses,
+    TypeFamilies,
+    TypeOperators
+

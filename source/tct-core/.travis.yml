@@ -1,0 +1,31 @@
+sudo: false
+
+language: c
+
+cache:
+  directories:
+  - $HOME/.stack/
+
+addons:
+  apt:
+    sources:
+    - hvr-ghc
+    packages:
+    - ghc-7.8.4
+    - ghc-7.10.2
+
+matrix:
+  fast_finish: true
+  include:
+    - env: GHCVER=7.8.4  STACK_YAML=stack.yaml
+    - env: GHCVER=7.10.2 STACK_YAML=stack-7.10.yaml
+
+before_install:
+  - mkdir -p ~/.local/bin
+  - export PATH=$HOME/.local/bin:$PATH
+  - travis_retry curl -L https://github.com/commercialhaskell/stack/releases/download/v0.1.4.0/stack-0.1.4.0-x86_64-linux.tar.gz | tar xz -C ~/.local/bin
+  - export PATH=/opt/ghc/$GHCVER/bin:$PATH
+
+script:
+  - stack --no-terminal --skip-ghc-check build
+

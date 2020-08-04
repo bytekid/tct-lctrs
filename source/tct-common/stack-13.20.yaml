@@ -1,0 +1,7 @@
+packages:
+  - '.'
+extra-deps:
+  - fgl-visualize-0.1.0.1 
+  - '../slogic'
+  - '../tct-core'
+resolver: lts-13.20 # ghc-8.6.5

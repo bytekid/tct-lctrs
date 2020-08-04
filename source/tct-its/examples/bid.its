@@ -1,0 +1,14 @@
+(GOAL COMPLEXITY)
+(STARTTERM (FUNCTIONSYMBOLS bid))
+(VAR Hand Attributes Points Bid SortedHand P HCP MP)
+(RULES
+bid(Hand,Attributes,Points,Bid) ->
+  Com_3(sort_hand(Hand,SortedHand),
+    evaluate(SortedHand,Attributes,Points),
+    make_bid(SortedHand,Attributes,Points,Bid))
+)
+(COMMENT
+evaluate(Hand,nil,P) ->
+  Com_2(hcp(Hand,0,HCP) ,
+    adjustments(Hand,MP)) :|: P >= HCP + MP && P <= HCP + MP
+)

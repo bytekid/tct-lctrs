@@ -1,0 +1,5 @@
+flags: {}
+packages:
+- '.'
+extra-deps: []
+resolver: lts-13.20 # ghc-8.6.5

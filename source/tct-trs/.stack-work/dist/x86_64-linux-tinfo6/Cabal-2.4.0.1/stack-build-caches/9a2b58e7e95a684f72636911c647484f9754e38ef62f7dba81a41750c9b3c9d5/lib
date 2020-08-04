@@ -1,0 +1,240 @@
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/Bounds/Violations/Find.hs:
+  hash: a699965c2526b73623e58104b4d9ab05270b3355c56718a484cd9127dbdebfe0
+  size: 6486
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/InnermostRuleRemoval.hs:
+  hash: 4967984a34f4a4d6a1946bb3098177ac9c95ea05971e8af37df68ce696c7bdb6
+  size: 3798
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Strategy/Certify.hs:
+  hash: fd34c4186b5f82fecc2f540824d435451981708783545c0dacb9e41804b55ca5
+  size: 7112
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DPGraph/RemoveWeakSuffixes.hs:
+  hash: b5186bd1ec1b2682f0543b53ae454bd484c7d42ae9c0f57059f544532bd7cfe1
+  size: 4815
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DPGraph/PathAnalysis.hs:
+  hash: 3a24b20f73d5ae04d2137661650f418bb6e4acfb18c98e34dba11d5632992127
+  size: 7063
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DPGraph/SimplifyRHS.hs:
+  hash: 36388264d95a682e07aebef65fa6cbde9ec024e0af7e3702d39eca2d554ac3cc
+  size: 5310
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/SafeMapping.hs:
+  hash: 57ba05ff0d4ba589acc19f9d8b865166983b231455bd17e0015de1cc5b0ed515
+  size: 3067
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/ToInnermost.hs:
+  hash: c168934257facbc99b2a58ad088c9b2c7cdd97e6d75108de129b7052a0f6b06c
+  size: 2702
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/Matrix/MI.hs:
+  hash: c318a23a7334fed510eb71345fa71b0e5672ddd5ea8bb495d105d4f94a6644a3
+  size: 64697
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/ComplexityPair.hs:
+  hash: 1cd006c7acc21cd0f29153a9caf80384923aee7429a73aeb27d5c801893117f6
+  size: 1979
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DecreasingLoops.hs:
+  hash: baed7461e94c8985cc7059d55bfc5717aaecadcc468a69c4276d140b01e2249b
+  size: 11158
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/ProblemKind.hs:
+  hash: 9e88d894bcacfd485cf98c803c20d5cb799caf1be8f378ab467ee847ae7a66d7
+  size: 2491
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DependencyPairs.hs:
+  hash: c84224c2aeabdaae39b43b846073775ae12207151f3d86b6adb12173dea047ba
+  size: 8647
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/RuleSelector.hs:
+  hash: 9a913583780fa9ba9b3917a043b8b98a01fcd7581ff7552c2d65fe6fa16e5f50
+  size: 12747
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Strategy/Web.hs:
+  hash: a34fe918aebfef03e0c5b714572c08953864b4a6fc01be81e94ec8925154d0dc
+  size: 2491
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/Problem.hs:
+  hash: a0c81331440303adff502daad913eec151397933444e67ac419e89958b128792
+  size: 12472
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/Signature.hs:
+  hash: 93725fdde7f13b15c0313131157e56d49c35f7a2b7bec8142edd2a7b0346962e
+  size: 6484
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DPGraph/PredecessorEstimation.hs:
+  hash: 32f642a4ad995bcbb9ba4ced31e0dbb7012861876ecbf89a1c732ce932a3b95c
+  size: 13374
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/WithCertification.hs:
+  hash: a398be6419d17ccd96bdcde129d5c13c4355dc267cb4ea6b8afa4f8cddaaab75
+  size: 3189
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processors.hs:
+  hash: 62213df33ad8de10c9e7f9f6daba17c8509df9d73a8fa14e329cf45457ac1b01
+  size: 10788
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DPGraph/RemoveHeads.hs:
+  hash: 8b04ec578cc23ea3cb1ff550641caf64f6a53690b09456b617ee8d4c437222cb
+  size: 4196
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/Rewriting.hs:
+  hash: 5d930091e45bd788f688099d71569de4f6f5b90bafc271b3cb548cd3db9e7e9c
+  size: 7573
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/Bounds/Violations.hs:
+  hash: 619968be321b3639c933a3a88eb8d02c8e4782f044e87ac30690a316a6bbe863
+  size: 2295
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Interactive.hs:
+  hash: 1fd73ae16de5039c0891c387c47d6a7e1e9e31ace2a96a19e83cdf0cf7ba866c
+  size: 1620
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data.hs:
+  hash: 10dcb466d9a329db9fa3d3ced8cad67015d14ffd7e542e42805b260aa039ff39
+  size: 1024
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/Decompose.hs:
+  hash: 518e10f77b569e9e3edbec0bfc12c2ea53a952226e1ea29bb9b55aa30ed25acb
+  size: 13603
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Strategy/Runtime.hs:
+  hash: d0942122cef94c17e675bdfa57a5a08d9808c00320a58615a30e7fa96452ec22
+  size: 8765
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/ComplexityPair.hs:
+  hash: d31e2b665eafec1e7a7d7eafa0e07672cb913a8740df54ff1ebfe8bac834288c
+  size: 1082
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/Arguments.hs:
+  hash: b12b646b6352f36ae837a6bc226f515b590a2797b24f613e7d98a7d73e496baf
+  size: 1879
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/Rules.hs:
+  hash: a2b4a8adc67a01967c1e2dddd836308a8990c9e212b813cd298bb2c005b91f26
+  size: 7994
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/UsablePositions.hs:
+  hash: 2fa802cc83408fd204d4d4350db0ab8dc7efeb8c461dc505dda5c4588bae8bef
+  size: 6610
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Config.hs:
+  hash: 890d5061ff20beb86bd903dd11bee21bb33058a60c2a10d70fcfcf5ddc1dc272
+  size: 5168
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Strategy/Competition.hs:
+  hash: db2b4c57e2ec43bf43e6ebc5bcfcfe723c0f9d87119affd9864a8cfcfbae8c57
+  size: 1385
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DPGraph/RemoveInapplicable.hs:
+  hash: 4196dc3deb339fa2508b8efa8a93df75f86deb56de391dfd2de0dcba30aa87cc
+  size: 4572
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/Symbol.hs:
+  hash: 9460ee9b0d8f5d8de766877d003b202751dcedc2407eeccce87ab79278e0bcaa
+  size: 2201
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/Matrix/MatrixInterpretation.hs:
+  hash: 23a042567c00f5d2723130b3e51e0340b7d8760fd8e83389898e87a41306da96
+  size: 16695
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/Poly/NaturalPI.hs:
+  hash: ac27656169713a2b55f2ff2404709edbe76b40f972a4e5d439ad8963af2cf975
+  size: 10683
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/CeTA.hs:
+  hash: 4f2a7a9eb167835303a090e9ea3657a604c47f25fb2e17992cf98dd98904c118
+  size: 5829
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/Bounds/Automata.hs:
+  hash: db4e11466a8d01368aa28594cd51ee2942882d50eab589979b278d4f68b4315f
+  size: 10261
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/DependencyGraph.hs:
+  hash: a37615ea8056311d981dbe114ba0cc9519e4a8df1eed3fdb623a9b72869ee3b5
+  size: 8903
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/Empty.hs:
+  hash: 28d6059850e295cfa01c4a8f800412e38a3c7af8aa9bb058f3caae573cd3c17e
+  size: 590
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/UsableRules.hs:
+  hash: 27dfef08fa2618015919df8fb2e17e5ca4a7066d709aa247de52bb36e6953d8f
+  size: 4907
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/Matrix/Matrix.hs:
+  hash: c8ea979626d9411437b0fc8111c51d0f426247670a1ccdb5b98f2a808b1a932f
+  size: 8817
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/RuleSet.hs:
+  hash: 6c1075d2014368038640797f0394c521a3f36486893b4a4b0955b7b9b551edfc
+  size: 376
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/tct-trs.cabal:
+  hash: b366a9f164a3b7e5e4cac401d46a25cddab481fda35cca058929a96fdfe55272
+  size: 4146
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/Interpretation.hs:
+  hash: 6a24880d690994c57588491e4c53f1c35556c736c793c1cdb6ef83ca5b3c5598
+  size: 11302
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/AmortisedAnalysis.hs:
+  hash: e69d3576f47258bb3623775ac3caf7c159184a50964ba39fd5cf2a8d32781c13
+  size: 15667
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Strategies.hs:
+  hash: b25c1626ea9fd3346e1078f71945ab45fb6ffd2794d6ce6d12e1a1b8c608fa14
+  size: 2702
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/UsableRules.hs:
+  hash: f78bceb5dc7828fd9fccff9dd978b9e4fbd8879c004bd9d84ce0e2ed2a317aee
+  size: 3294
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DPGraph/Trivial.hs:
+  hash: bc2ed8863ab85ef27e12b8252696488c75f4ac20b78543c59bcc0d06a32f6376
+  size: 3121
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/CheckProperty.hs:
+  hash: 3e1aebf70fb49693681e92a81442060103c234488d726f907e3df045eca80d93
+  size: 6369
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/Bounds.hs:
+  hash: b322df2cb9a25958f1b8907ace31281b07829dd006fc1958c6e59fbe0c9c7b0d
+  size: 10428
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/Matrix/NaturalMI.hs:
+  hash: 7e23c6be4eff3aa449a1dfd9b3ce1a2aa7ead93ae05690bbba365c34eb6cf23e
+  size: 48382
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/Bounds/Violations/Fix.hs:
+  hash: c6d6adad85c96bb33a16e7cc1827160366d46ca865c35bae7d833f8ee723025f
+  size: 9659
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Strategy/Derivational.hs:
+  hash: b35dea9fba47cd38eb23687f6dc64f4f6c2b828f5abca7a6fc90f608c20fc4d0
+  size: 4657
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs.hs:
+  hash: 02abf6f105db8be43125b87067933da9b73cd41bffedfa904506ec5053cbd43e
+  size: 849
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Data/Precedence.hs:
+  hash: c6ce88f5c9b37abd49eaaefbaf797800dd899d285aa7f174407b6436d0a2d99b
+  size: 2563
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Encoding/ArgumentFiltering.hs:
+  hash: d2dfcf72da86d02bbfefec44566790167979a2be501771c412e4c85d992a653f
+  size: 4022
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/EpoStar.hs:
+  hash: 642818c2c8e0de42e838947c667dd6aedde0a61058f3f8e928f7f3df41b7766c
+  size: 20396
+  modtime: 1590315614
+/home/bytekid/tools/tct-bundle-3.3/source/tct-trs/src/Tct/Trs/Processor/DP/DPGraph/DecomposeDG.hs:
+  hash: 8cbd0cfa83187bafe100739f039024c582ed904590344ff64fac5d16bbafe130
+  size: 12151
+  modtime: 1590315614

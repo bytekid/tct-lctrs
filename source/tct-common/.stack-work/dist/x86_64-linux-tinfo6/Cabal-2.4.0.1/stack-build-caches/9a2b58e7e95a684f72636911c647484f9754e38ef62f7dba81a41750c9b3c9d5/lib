@@ -1,0 +1,32 @@
+/home/bytekid/tools/tct-bundle-3.3/source/tct-common/src/Tct/Common/SMT.hs:
+  hash: ecafe4d2e8f5156a73859cb7db0bf4b3246fb59357030dabddd675d4cb075e99
+  size: 4097
+  modtime: 1592550279
+/home/bytekid/tools/tct-bundle-3.3/source/tct-common/src/Tct/Common/PolynomialInterpretation.hs:
+  hash: 1d0d2c093dafee21676db679dc6d9096e70b9128a5f72ab06451eba318be4620
+  size: 5186
+  modtime: 1592551420
+/home/bytekid/tools/tct-bundle-3.3/source/tct-common/src/Tct/Common/Ring.hs:
+  hash: 6bbe339944f96bea0fcb0e5d7fa9194137f842119f46cdc5a120acc23c3ce956
+  size: 580
+  modtime: 1592550279
+/home/bytekid/tools/tct-bundle-3.3/source/tct-common/src/Tct/Common/Polynomial.hs:
+  hash: 9201efc995b9aee3a222da29293571119f4fc970a3ad8795b00fc7ce35e259f4
+  size: 13987
+  modtime: 1592551435
+/home/bytekid/tools/tct-bundle-3.3/source/tct-common/src/Tct/Common/Graph.hs:
+  hash: 66bf09fd255697f49bdb1a63cd7d91f1ac6476c29e4c4e797f894b7bc7ba8373
+  size: 13266
+  modtime: 1592550279
+/home/bytekid/tools/tct-bundle-3.3/source/tct-common/src/Tct/Common/CeTA.hs:
+  hash: 850a80ab1d71dae5c2b247387c4c201258a55f5e5421c403dd4f4ad268abec4e
+  size: 1970
+  modtime: 1592550279
+/home/bytekid/tools/tct-bundle-3.3/source/tct-common/src/Tct/Common/ProofCombinators.hs:
+  hash: 7d3d44eb2fa236ad9d7e31071d36bc8c88de39cb125831f0634c67645e0fb179
+  size: 2866
+  modtime: 1592550279
+/home/bytekid/tools/tct-bundle-3.3/source/tct-common/tct-common.cabal:
+  hash: df8c056c494d5595a5ebe60658f33955bfc0cf2c6bae704c5fc3b140920d6cc2
+  size: 1419
+  modtime: 1592550279
