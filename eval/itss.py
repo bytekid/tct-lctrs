@@ -4,25 +4,47 @@ from os import listdir
 from os.path import isfile, join
 import re
 import sys
+from functools import reduce
+import operator
 sys.path.append('.')
 from results import Results
 
 global results 
 results = Results.data
 
+global style
+style = "<style> \
+#results { \
+  font-family: Arial, Helvetica, sans-serif;\
+  border-collapse: collapse;\
+  width: 100%;\
+}\
+#results td, #results th {\
+  border: 1px solid #ddd;\
+  padding: 8px;\
+}\
+#results tr:nth-child(even){background-color: #f2f2f2;}\
+results tr:hover {background-color: #ddd;}\
+#results th {\
+  padding-top: 12px;\
+  padding-bottom: 12px;\
+  text-align: left;\
+  background-color: #aaa;\
+  color: white;\
+}\
+#results td.summary { font-weight:bold }\
+</style>"
+
 def check(job):
   p = job["problem"]
   fname = job["path"]
   pfile = open(fname, "r")
   
-  #with tempfile.NamedTemporaryFile() as outfile:
   cmd = "./sandbox 60 stack exec tct-its -- -s runtime "
   bashCommand = cmd + " " + fname
   #print(bashCommand)
   process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
   out, err = process.communicate()
-  #if err:
-  #  print(err)
   regex = re.compile(r'WORST_CASE\(\?,O\(([^\s]*)')
   match = re.search(regex, str(out))  
   if match != None:
@@ -52,18 +74,20 @@ def check(job):
 
 def accumulate(jobs):
   summary= {}
-  tools = ["tct", "KoAT", "CoFloCo", "PUBS"]
+  tools = ["TCT", "KoAT", "CoFloCo", "PUBS"]
   for tool in tools:
     summary[tool] = {"solved": 0, "min": 0}
-  print("<html><body><table border=\"1\" cellspacing=\"0\"cellpadding=\"1\">")
-  print("<tr><td>&nbsp;</td><td>TCT</td><td>KoaT</td><td>CoFloCo</td><td>PUBS</td></tr>")
+  print("<html>" + style)
+  print("<body><table id=\"results\">")
+  toolnames = ["<th>" + t + "</th>" for t in tools]
+  print("<tr><th>&nbsp;</th>" + reduce(operator.add, toolnames, "") + "</tr>")
   for r in jobs:
     name = r["path"][len("koat-evaluation/examples/"):-5] # drop .koat
     print("<tr><td>" + name + "</td>")
     degrees = {}
     # TCT
-    degrees["tct"] = r["degree"] if "degree" in r else None
-    print("<td>" + ("?" if degrees["tct"] is None else str(degrees["tct"])) + "</td>")
+    degrees["TCT"] = r["degree"] if "degree" in r else None
+    print("<td>" + ("?" if degrees["TCT"] is None else str(degrees["TCT"])) + "</td>")
     
     # other tools
     for tool in tools[1:]:
@@ -76,6 +100,12 @@ def accumulate(jobs):
     for tool in tools:
       summary[tool]["solved"] += 0 if degrees[tool] is None else 1
       summary[tool]["min"] += 0 if degrees[tool] is None or degrees[tool] != m else 1
+
+  solveds = ["<td style=\"summary\">" + str(summary[t]["solved"]) + "</td>" for t in tools]
+  trsumm= "<tr>"
+  print(trsumm + "<td style=\"summary\">solved</td>" + reduce(operator.add, solveds, "") + "</tr>")
+  mins = ["<td>" + str(summary[t]["min"]) + "</td>" for t in tools]
+  print(trsumm + "<td>minimal</td>" + reduce(operator.add, mins, "") + "</tr>")
 
   print("</table></body></html>")
 
