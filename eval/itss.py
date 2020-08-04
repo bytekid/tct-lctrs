@@ -29,17 +29,19 @@ def check(job):
     g = match.group(1)
     complexity = g[:-2]
     complexity_str = "O(" + complexity + ")"
-    print(fname + ": " + complexity_str + " '" + g + "'")
     degrees = {
       "1" : 0.,
       "log(n)" : .5,
       "n^1" : 1.,
       "log(n)*n^1" : 1.5,
       "n^2" : 2.,
+      "log(n)*n^2" : 2.5,
+      "log(n)^2*n^2" : 2.75,
       "n^3" : 3.,
       "n^4" : 4.,
     }
     degree = degrees[complexity] if complexity in degrees else 666
+    print(fname + ": " + complexity_str + " '" + str(degree) + "'")
     if complexity not in degrees:
       print("unknown '" + complexity + "'")
     job["degree"] = degree
@@ -49,30 +51,35 @@ def check(job):
   return job
 
 def accumulate(jobs):
-  print("<html><body><table>")
+  summary= {}
+  tools = ["tct", "KoAT", "CoFloCo", "PUBS"]
+  for tool in tools:
+    summary[tool] = {"solved": 0, "min": 0}
+  print("<html><body><table border=\"1\" cellspacing=\"0\"cellpadding=\"1\">")
   print("<tr><td>&nbsp;</td><td>TCT</td><td>KoaT</td><td>CoFloCo</td><td>PUBS</td></tr>")
   for r in jobs:
     name = r["path"][len("koat-evaluation/examples/"):-5] # drop .koat
-    print("<tr><td>" + name + "<td>")
+    print("<tr><td>" + name + "</td>")
+    degrees = {}
     # TCT
-    tct_degree = str(r["degree"]) if "degree" in r else "?" 
-    print("<td>" + tct_degree + "</td>")
-    # KoAT
-    koat_result = results["KoAT"][name]
-    koat_degree = str(koat_result["degree"]) if "degree" in koat_result else "?" 
-    print("<td>" + koat_degree + "</td>")
-    # CoFloCo
-    cofloco_result = results["CoFloCo"][name]
-    cofloco_degree = str(cofloco_result["degree"]) if "degree" in cofloco_result else "?" 
-    print("<td>" + cofloco_degree + "</td>")
-    # PUBS
-    pubs_result = results["PUBS"][name]
-    pubs_degree = str(pubs_result["degree"]) if "degree" in pubs_result else "?" 
-    print("<td>" + pubs_degree + "</td>")
+    degrees["tct"] = r["degree"] if "degree" in r else None
+    print("<td>" + ("?" if degrees["tct"] is None else str(degrees["tct"])) + "</td>")
+    
+    # other tools
+    for tool in tools[1:]:
+      tresult = results[tool][name]
+      degrees[tool] = tresult["degree"] if "degree" in tresult else None
+      print("<td>" + ("?" if degrees[tool] is None else str(degrees[tool])) + "</td>")
     print("</tr>")
+
+    m = min(degrees.values())
+    for tool in tools:
+      summary[tool]["solved"] += 0 if degrees[tool] is None else 1
+      summary[tool]["min"] += 0 if degrees[tool] is None or degrees[tool] != m else 1
+
   print("</table></body></html>")
 
-  return [j["degree"] if "degree" in j else None for j in jobs]
+  return summary
 
 
 if __name__ == "__main__":
@@ -89,16 +96,23 @@ if __name__ == "__main__":
         jobs.append({"problem":file, "path":filepath})
   
   # check in parallel
+  print("<!--")
   numprocs = multiprocessing.cpu_count() - 1
   print("Doing " + str(len(jobs)) + " jobs with " + str(numprocs) + " procs")
   pool = multiprocessing.Pool(numprocs)
   tctresults = pool.map_async(check, jobs)
   pool.close()
   pool.join()
-  tctresults = accumulate(tctresults.get())
+  print("-->")
+  summary = accumulate(tctresults.get())
 
   #results = []
   #for j in jobs:
   #  results.append(check(j))
-  print("%d/%d OK" % (len([r for r in tctresults if r]), len(tctresults)))
+
+  l = len(summary)
+  print("<!-- SUMMARY: ")
+  for t in summary.keys():
+    print("  %s: %d/%d solved (%d min)" % (t, summary[t]["solved"], l, summary[t]["min"]))
+  print("-->")
   
