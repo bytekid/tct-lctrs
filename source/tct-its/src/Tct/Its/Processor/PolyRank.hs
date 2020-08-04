@@ -107,10 +107,10 @@ timebounds :: [RuleId] -> ItsStrategy
 timebounds rs = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Linear, withSizebounds = rs }
 
 timeboundsCandidates :: [RuleId] -> [[RuleId]]
-timeboundsCandidates = tail . L.subsequences
+timeboundsCandidates = tail . L.subsequences -- tail drops empty sequence
 
 polyDeclaration ::T.Declaration ('[ T.Argument 'T.Required PI.Shape ] T.:-> ItsStrategy)
-polyDeclaration = T.declare "poly" ["(non-liear) polynomial ranking function."] (T.OneTuple PI.shapeArg) poly
+polyDeclaration = T.declare "poly" ["(non-linear) polynomial ranking function."] (T.OneTuple PI.shapeArg) poly
 
 farkasDeclaration ::T.Declaration ('[] T.:-> ItsStrategy)
 farkasDeclaration = T.declare "farkas" ["linear polynomial ranking function."] () farkas
