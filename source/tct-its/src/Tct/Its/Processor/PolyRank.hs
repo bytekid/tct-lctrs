@@ -297,9 +297,11 @@ entscheide proc prob@Its
       undefinedConstraint 
         | withSize  = SMT.bigAnd [ c SMT..== SMT.zero | r <- somerules, c <- undefinedCofs r ]
         | otherwise = SMT.top
-      -- SW: in case of multi-term rhss, coefficients may get negative: avoid
+      -- SW: monotonicity (in case of multi-term rhss, coefficients may get negative? avoid)
       inters = [ PI.interpretations ebsi `find` f | f <- funs somerules]
       coeffs = concat [ P.constantValue i : P.coefficients i | i <- inters ]
+      -- SW: ensure that condition implies lhs non-negative (condition 3 in [BEFFG16, Def 3.1]) 
+      nonneg_lhs (_, (Rule l _ cs)) = (interpretLhs l) `eliminateFarkas` interpretCon cs
 
 
     SMT.assert (SMT.top :: SMT.Formula Int)
@@ -307,8 +309,11 @@ entscheide proc prob@Its
     SMT.assert $ SMT.bigOr rulesConstraint
     SMT.assert $ SMT.maximize $ bigAdd [ strict i | i <- strictrules ]
     SMT.assert undefinedConstraint
-    SMT.assert $ SMT.bigAnd [ c SMT..>= SMT.zero | c <- coeffs]
-
+    -- SW: if size bounds are used, monotonicity is required; otherwise not
+    --     necessarily but lhss must be interpreted non-negative wrt constraints
+    SMT.assert =<<
+      if withSize then return (SMT.bigAnd $ [ c SMT..>= SMT.zero | c <- coeffs])
+      else SMT.bigAndM [] -- nonneg_lhs r | r <- someirules ]
 
     return $ SMT.decode (ebsi, strictVarEncoder)
 
