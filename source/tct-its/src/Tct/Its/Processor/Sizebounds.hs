@@ -22,7 +22,7 @@ import           Tct.Its.Data.ResultVariableGraph (RVGraph)
 import qualified Tct.Its.Data.ResultVariableGraph as RVG (compute)
 import           Tct.Its.Data.Rule
 import           Tct.Its.Data.Sizebounds          (Sizebounds)
-import qualified Tct.Its.Data.Sizebounds          as SB (initialise, updateSizebounds)
+import qualified Tct.Its.Data.Sizebounds          as SB (initialise, UpdateFun, updateSizebounds, updateSizeboundsSMT)
 
 
 
@@ -101,16 +101,18 @@ instance T.Processor SizeboundsProcessor where
 
   execute SizeboundsProc prob | isClosed prob = closedProof prob
   execute SizeboundsProc prob = 
-    if sizebounds_ prob /= sizebounds_ nprob
-      then progress (Progress nprob) (Applicable pproof)
+    if sizebounds_ prob /= sizebounds_ nnprob
+      then progress (Progress nnprob) (Applicable pproof)
       else progress NoProgress (Applicable SizeboundsFail)
     where
-      nprob = updateSizebounds prob
-      pproof = SizeboundsProof (domain prob, error "sizebound" `fromMaybe` sizebounds_ nprob)
+      nprob = updateSizebounds SB.updateSizebounds prob
+      nnprob = updateSizebounds SB.updateSizeboundsSMT nprob
+      pproof = SizeboundsProof (domain prob, error "sizebound" `fromMaybe` sizebounds_ nnprob)
 
-updateSizebounds :: Its -> Its
-updateSizebounds prob = prob {sizebounds_ = Just sbounds'} where
-  sbounds' = SB.updateSizebounds
+updateSizebounds :: SB.UpdateFun -> Its -> Its
+updateSizebounds update prob = prob {sizebounds_ = Just sbounds'} where
+  sbounds' = update
+    (irules_ prob)
     (tgraph_ prob)
     (error "update rvgraph" `fromMaybe` rvgraph_ prob)
     (timebounds_ prob)

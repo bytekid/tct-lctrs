@@ -62,7 +62,7 @@ module Tct.Its.Processor.PolyRank  where
   -- ) where
 
 import           Control.Monad                       (liftM)
-import qualified Data.List                           as L (partition, intersect, subsequences)
+import qualified Data.List                           as L (partition, intersect, subsequences, sortOn, reverse)
 import           Data.Maybe                          (fromMaybe)
 import qualified Data.Map.Strict                     as M
 import qualified Data.IntMap.Strict                     as IM
@@ -107,7 +107,7 @@ timebounds :: [RuleId] -> ItsStrategy
 timebounds rs = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Linear, withSizebounds = rs }
 
 timeboundsCandidates :: [RuleId] -> [[RuleId]]
-timeboundsCandidates = tail . L.subsequences -- tail drops empty sequence
+timeboundsCandidates = L.reverse . (L.sortOn length) . tail . L.subsequences -- tail drops [], longer ones first
 
 polyDeclaration ::T.Declaration ('[ T.Argument 'T.Required PI.Shape ] T.:-> ItsStrategy)
 polyDeclaration = T.declare "poly" ["(non-linear) polynomial ranking function."] (T.OneTuple PI.shapeArg) poly
@@ -313,7 +313,7 @@ entscheide proc prob@Its
     --     necessarily but lhss must be interpreted non-negative wrt constraints
     SMT.assert =<<
       if withSize then return (SMT.bigAnd $ [ c SMT..>= SMT.zero | c <- coeffs])
-      else SMT.bigAndM [] -- nonneg_lhs r | r <- someirules ]
+      else SMT.bigAndM [] -- nonneg_lhs r | r <- someirules ] but say that vars are positive
 
     return $ SMT.decode (ebsi, strictVarEncoder)
 
@@ -355,7 +355,6 @@ entscheide proc prob@Its
       where
         strictMap = M.mapKeysMonotonic unStrict $ M.filter (>0) stricts
         (strictList, weakList) = L.partition (\(i,_) -> i `M.member` strictMap) someirules
-        -- pint  = M.map (P.fromViewWith (M.map (fromMaybe 666) inter `find`)) absi
         costs
           | withSize = computeBoundWithSize tgraph allrules (IM.fromList someirules) tbounds (error "sizebounds" `fromMaybe` sizebounds) costf 
           | otherwise = C.poly (inst startterm)

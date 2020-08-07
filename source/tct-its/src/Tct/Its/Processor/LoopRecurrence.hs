@@ -45,8 +45,8 @@ import           Tct.Its.Data.Selector               (selNextSCCAny)
 import           Tct.Common.SMT ((.&&), (.=>), (.+), (.*), (.-))
 import qualified Tct.Common.SMT as SMT
 
---import           Debug.Trace
-trace _ expr = expr
+import           Debug.Trace
+--trace _ expr = expr
 
 type IntPoly        = P.Polynomial Int Var
 type SMTExpr        = SMT.IExpr Var
@@ -272,7 +272,7 @@ checkDecreasePattern ((lexpr, rexprs), p) rule_constr inner_complexity = do
       no_decr_unsat <- isSAT cconstr
       let
         res = constr_sat && not no_decr_unsat && not may_be_neg
-      return (trace ("  constr_sat " ++ show constr_sat ++ " not no_decr_unsat " ++ show (not no_decr_unsat)) res)
+      return (trace ("  constr_sat " ++ show constr_sat ++ " not no_decr_unsat " ++ show (not no_decr_unsat) ++ " may be neg " ++ show may_be_neg) res)
     ) (trace ("try pattern " ++ (name p) ++ " for " ++ show lexpr ++ ": " ++ show growth_ok) growth_ok) rexprs
   return (
     if not all_decrease || rlen > branch p then Nothing

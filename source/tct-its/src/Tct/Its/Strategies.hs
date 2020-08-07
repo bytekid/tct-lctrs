@@ -63,12 +63,13 @@ def useAT useAF =
 
   wellformed
   .>>> try simpl1
+  -- .>>> te farkas
   .>>> try (when ?useAT (withProblem (transitionAbstraction . monotonicityPredicates)))
   .>>> try (when ?useAF (withProblem (argumentFilter . unusedFilter)))
   .>>> try unreachableRules
-  .>>> try sizebounds
+  .>>> te sizebounds
   -- .>>> try pathAnalysis -- FIXME: update rvgraph error; just re-compute it
-  .>>> afterChaining (
+  .>>> ( --afterChaining (
     try simpl2
     .>>> try sizebounds
     .>>> te constantFarkas
