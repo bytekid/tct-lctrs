@@ -161,8 +161,8 @@ updateSizeboundsConstr irules tgraph rvgraph tbounds sbounds lbounds =
 
 sizeboundsConstr :: Rules -> Timebounds -> Sizebounds -> LocalSizebounds -> RVGraph -> [RV] -> Sizebounds
 sizeboundsConstr irules tbounds sbounds lbounds rvgraph scc 
-  | not (null unbounds)                                         = trace "some unbounded" sbounds
-  | not (all (dependencyConstraint rvgraph scc . fst) sumpluss) = trace "some strange dependencies" sbounds
+  | not (null unbounds)                                         = sbounds
+  | not (all (dependencyConstraint rvgraph scc . fst) sumpluss) = sbounds
   | otherwise = foldl (\sbounds' rv -> check_update rv sbounds') sbounds scc
   where
     (_,_,sumpluss,unbounds) = classify lbounds scc
@@ -187,7 +187,7 @@ sizeboundsConstr irules tbounds sbounds lbounds rvgraph scc
         useful_bnds = [ p | p <- complex_bnds, not (C.Unknown == p) ]
       in
       if pre  == [] || length (rhs rl) > 1 || idx == Nothing || useful_bnds == [] then sbs
-      else (trace ("sbnds" ++ show pre_bounds ++  " possible bnds " ++ show bnds ++ " cbns " ++ show complex_bnds) (M.insert rv (head useful_bnds) sbs))
+      else (trace ("ossible bnds " ++ show bnds ++ " cbns " ++ show complex_bnds) (M.insert rv (head useful_bnds) sbs))
 
 ppSizebounds :: Vars -> Sizebounds -> PP.Doc
 ppSizebounds vars sbounds = ppRVs vars (M.assocs sbounds) (\sbound -> [PP.pretty sbound])
