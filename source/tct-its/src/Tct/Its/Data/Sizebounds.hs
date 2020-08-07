@@ -36,8 +36,8 @@ import           Tct.Its.Data.LocalSizebounds (LocalSizebounds)
 import qualified Tct.Its.Data.LocalSizebounds as LB
 import           Tct.Its.Data.Rule (toGte)
 import           Tct.Its.Data.Types
---import Debug.Trace
-trace _ x = x
+import Debug.Trace
+--let trace _ x = x
 
 type Sizebounds = Bounds RV
 
@@ -166,8 +166,8 @@ sizeboundsSMT irules tbounds sbounds lbounds rvgraph scc
   | otherwise = foldl (\sbounds' rv -> check_update rv sbounds') sbounds scc
   where
     (_,_,sumpluss,unbounds) = classify lbounds scc
-    check_update rv sbs = if boundOf sbs rv == (trace ("check_update " ++ show rv) Unknown) then check_smt rv sbs else sbs
-    check_smt rv sbs = 
+    check_update rv sbs = if boundOf sbs rv == Unknown then check_constraint rv sbs else sbs
+    check_constraint rv sbs = 
       let
         rl = irules IM.! (rvRule rv)
         v = rvVar rv
@@ -176,13 +176,14 @@ sizeboundsSMT irules tbounds sbounds lbounds rvgraph scc
         rhs_v = (args r) L.!! (case idx of Just n -> n; _ ->  0)
         cs = con rl --- make sure cs is conjunction
         bnd_ps = [ (l, r) | cj <- cs, Gte l r <- cj ] ++ [ (l, r) | cj <- cs, Eq l r <- cj ]
-        bnds = [ l | (l, r) <- bnd_ps, v `elem` P.variables r, all (\c -> c >= 0) (P.coefficients r)]
+        bnds = [ (l, - P.constantValue r) | (l, r) <- bnd_ps, v `elem` P.variables r, all (\c -> c >= 0) (P.coefficients r)]
         pre = RVG.predecessors rvgraph rv
         all_pre_bounds = [ boundsOfVars sbs (rvRule p, rvRpos p) | p <- pre ]
         pre_bounds = foldl (M.unionWith C.maximal) (head all_pre_bounds) (tail all_pre_bounds)
 
-        bnd_exprs = [ P.substituteVariables rhs_v (M.fromList [(v, p)]) | p <- bnds ]
-        complex_bnds = [ compose (C.poly p) pre_bounds | p <- bnd_exprs ]
+        bnd_exprs = [ P.substituteVariables rhs_v (M.fromList [(v, add p (P.constant rconst))]) | (p, rconst) <- bnds ]
+        bnd_exprsx = [ if P.constantValue (p :: P.Polynomial Int Var) <= 0 then fst (P.splitConstantValue p) else p | p <- bnd_exprs]
+        complex_bnds = [ compose (C.poly p) pre_bounds | p <- bnd_exprsx ]
         useful_bnds = [ p | p <- complex_bnds, not (C.Unknown == p) ]
       in
       if pre  == [] || length (rhs rl) > 1 || idx == Nothing || useful_bnds == [] then sbs
