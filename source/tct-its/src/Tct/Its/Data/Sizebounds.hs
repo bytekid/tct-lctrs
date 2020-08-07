@@ -8,7 +8,7 @@ module Tct.Its.Data.Sizebounds
   , updateSizebounds
   , sizebound
   , sizebounds
-  , updateSizeboundsSMT
+  , updateSizeboundsConstr
   , bridge
   , combine
   , module Tct.Its.Data.Bounds
@@ -150,17 +150,17 @@ combine sb r r' rnew =
   in
   M.foldrWithKey del_update (ins sb) sb
 
-updateSizeboundsSMT :: UpdateFun
-updateSizeboundsSMT irules tgraph rvgraph tbounds sbounds lbounds =
+updateSizeboundsConstr :: UpdateFun
+updateSizeboundsConstr irules tgraph rvgraph tbounds sbounds lbounds =
   let sboundsn = foldl k sbounds (RVG.sccs rvgraph) in
-  if sboundsn /= sbounds then updateSizeboundsSMT irules tgraph rvgraph tbounds sboundsn lbounds else sboundsn
+  if sboundsn /= sbounds then updateSizeboundsConstr irules tgraph rvgraph tbounds sboundsn lbounds else sboundsn
   where
     k nsbounds scc = case scc of
       RVG.Trivial rv    -> sizebound tgraph lbounds rv nsbounds
-      RVG.NonTrivial rvs -> sizeboundsSMT irules tbounds nsbounds lbounds rvgraph rvs
+      RVG.NonTrivial rvs -> sizeboundsConstr irules tbounds nsbounds lbounds rvgraph rvs
 
-sizeboundsSMT :: Rules -> Timebounds -> Sizebounds -> LocalSizebounds -> RVGraph -> [RV] -> Sizebounds
-sizeboundsSMT irules tbounds sbounds lbounds rvgraph scc 
+sizeboundsConstr :: Rules -> Timebounds -> Sizebounds -> LocalSizebounds -> RVGraph -> [RV] -> Sizebounds
+sizeboundsConstr irules tbounds sbounds lbounds rvgraph scc 
   | not (null unbounds)                                         = trace "some unbounded" sbounds
   | not (all (dependencyConstraint rvgraph scc . fst) sumpluss) = trace "some strange dependencies" sbounds
   | otherwise = foldl (\sbounds' rv -> check_update rv sbounds') sbounds scc

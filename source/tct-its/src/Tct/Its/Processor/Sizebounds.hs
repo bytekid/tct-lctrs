@@ -22,7 +22,7 @@ import           Tct.Its.Data.ResultVariableGraph (RVGraph)
 import qualified Tct.Its.Data.ResultVariableGraph as RVG (compute)
 import           Tct.Its.Data.Rule
 import           Tct.Its.Data.Sizebounds          (Sizebounds)
-import qualified Tct.Its.Data.Sizebounds          as SB (initialise, UpdateFun, updateSizebounds, updateSizeboundsSMT)
+import qualified Tct.Its.Data.Sizebounds          as SB (initialise, UpdateFun, updateSizebounds, updateSizeboundsConstr)
 
 
 
@@ -106,7 +106,7 @@ instance T.Processor SizeboundsProcessor where
       else progress NoProgress (Applicable SizeboundsFail)
     where
       nprob = updateSizebounds SB.updateSizebounds prob
-      nnprob = updateSizebounds SB.updateSizeboundsSMT nprob
+      nnprob = updateSizebounds SB.updateSizeboundsConstr nprob
       pproof = SizeboundsProof (domain prob, error "sizebound" `fromMaybe` sizebounds_ nnprob)
 
 updateSizebounds :: SB.UpdateFun -> Its -> Its
