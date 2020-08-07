@@ -16,7 +16,7 @@ module Tct.Its.Data.Sizebounds
 
 import qualified Data.Map.Strict as M
 import qualified Data.IntMap.Strict as IM
-import qualified Data.List as L (intersect, lookup, nub, (\\), elemIndex, (!!))
+import qualified Data.List as L (intersect, lookup, nub, (\\), elemIndex, (!!), delete)
 
 
 import qualified Tct.Core.Common.Pretty as PP
@@ -153,14 +153,33 @@ combine sb r r' rnew =
 updateSizeboundsConstr :: UpdateFun
 updateSizeboundsConstr irules tgraph rvgraph tbounds sbounds lbounds =
   let sboundsn = foldl k sbounds (RVG.sccs rvgraph) in
-  if sboundsn /= sbounds then updateSizeboundsConstr irules tgraph rvgraph tbounds sboundsn lbounds else sboundsn
+  let sboundsnp = propagate irules sboundsn rvgraph in
+  if sboundsnp /= sbounds then updateSizeboundsConstr irules tgraph rvgraph tbounds sboundsnp lbounds else sboundsn
   where
     k nsbounds scc = case scc of
       RVG.Trivial rv    -> sizebound tgraph lbounds rv nsbounds
-      RVG.NonTrivial rvs -> sizeboundsConstr irules tbounds nsbounds lbounds rvgraph rvs
+      RVG.NonTrivial rvs -> sizeboundsConstr irules nsbounds lbounds rvgraph rvs
 
-sizeboundsConstr :: Rules -> Timebounds -> Sizebounds -> LocalSizebounds -> RVGraph -> [RV] -> Sizebounds
-sizeboundsConstr irules tbounds sbounds lbounds rvgraph scc 
+propagate :: Rules -> Sizebounds -> RVGraph -> Sizebounds
+propagate irules sbounds rvgraph = foldl check sbounds (M.keys sbounds)
+  where
+    check sbs rv = if boundOf sbs rv == Unknown then check_upd rv sbs else sbs
+    check_upd rv sbs =
+      let
+        rl = irules IM.! (rvRule rv)
+        (l,r) = (lhs rl, (rhs rl) L.!! (rvRpos rv))
+        idxm = L.elemIndex (P.variable (rvVar rv)) (args l) -- variable index
+        idx = case idxm of Just n -> n ; _ -> 0
+        rv_modified = not (args l L.!! idx == (args r L.!! idx))
+        pre = RVG.predecessors rvgraph rv
+        all_pre_bounds = [ boundOf sbs p | p <- L.delete rv pre ]
+        max_bound = foldl C.maximal (head all_pre_bounds) (tail all_pre_bounds)
+      in
+      if pre == [] || idxm == Nothing || (rv `elem` pre && rv_modified) then sbs
+      else M.insert rv max_bound sbs
+
+sizeboundsConstr :: Rules -> Sizebounds -> LocalSizebounds -> RVGraph -> [RV] -> Sizebounds
+sizeboundsConstr irules sbounds lbounds rvgraph scc 
   | not (null unbounds)                                         = sbounds
   | not (all (dependencyConstraint rvgraph scc . fst) sumpluss) = sbounds
   | otherwise = foldl (\sbounds' rv -> check_update rv sbounds') sbounds scc
@@ -174,8 +193,8 @@ sizeboundsConstr irules tbounds sbounds lbounds rvgraph scc
         r = head (rhs rl) -- consider only the case for one term on rhs
         idx = L.elemIndex (P.variable v) (args (lhs rl))
         rhs_v = (args r) L.!! (case idx of Just n -> n; _ ->  0)
-        cs = con rl --- make sure cs is conjunction
-        bnd_ps = [ (l, r) | cj <- cs, Gte l r <- cj ] ++ [ (l, r) | cj <- cs, Eq l r <- cj ]
+        cs = con rl
+        bnd_ps = [ (l, r) | c <- cs, Gte l r <- c ] ++ [ (l, r) | c <- cs, Eq l r <- c ]
         bnds = [ (l, - P.constantValue r) | (l, r) <- bnd_ps, v `elem` P.variables r, all (\c -> c >= 0) (P.coefficients r)]
         pre = RVG.predecessors rvgraph rv
         all_pre_bounds = [ boundsOfVars sbs (rvRule p, rvRpos p) | p <- pre ]
@@ -187,7 +206,7 @@ sizeboundsConstr irules tbounds sbounds lbounds rvgraph scc
         useful_bnds = [ p | p <- complex_bnds, not (C.Unknown == p) ]
       in
       if pre  == [] || length (rhs rl) > 1 || idx == Nothing || useful_bnds == [] then sbs
-      else (trace ("ossible bnds " ++ show bnds ++ " cbns " ++ show complex_bnds) (M.insert rv (head useful_bnds) sbs))
+      else (trace ("possible bnds " ++ show bnds ++ " cbns " ++ show complex_bnds) (M.insert rv (head useful_bnds) sbs))
 
 ppSizebounds :: Vars -> Sizebounds -> PP.Doc
 ppSizebounds vars sbounds = ppRVs vars (M.assocs sbounds) (\sbound -> [PP.pretty sbound])
