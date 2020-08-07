@@ -67,9 +67,9 @@ def useAT useAF =
   .>>> try (when ?useAT (withProblem (transitionAbstraction . monotonicityPredicates)))
   .>>> try (when ?useAF (withProblem (argumentFilter . unusedFilter)))
   .>>> try unreachableRules
-  .>>> te sizebounds
+  .>>> try sizebounds
   -- .>>> try pathAnalysis -- FIXME: update rvgraph error; just re-compute it
-  .>>> ( --afterChaining (
+  .>>> afterChaining (
     try simpl2
     .>>> try sizebounds
     .>>> te constantFarkas
