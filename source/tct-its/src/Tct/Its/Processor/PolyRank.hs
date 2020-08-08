@@ -311,9 +311,10 @@ entscheide proc prob@Its
     SMT.assert undefinedConstraint
     -- SW: if size bounds are used, monotonicity is required; otherwise not
     --     necessarily but lhss must be interpreted non-negative wrt constraints
-    SMT.assert =<<
-      if withSize then return (SMT.bigAnd $ [ c SMT..>= SMT.zero | c <- coeffs])
-      else SMT.bigAndM [] -- nonneg_lhs r | r <- someirules ] but say that vars are positive
+    -- SW: fix: allow non-monotonicity, but fix afterwards interpretation of term
+    -- SMT.assert =<<
+    --  if withSize then return (SMT.bigAnd $ [ c SMT..>= SMT.zero | c <- coeffs])
+    --  else SMT.bigAndM [] -- nonneg_lhs r | r <- someirules ] but say that vars are positive
 
     return $ SMT.decode (ebsi, strictVarEncoder)
 
@@ -358,7 +359,8 @@ entscheide proc prob@Its
         costs
           | withSize = computeBoundWithSize tgraph allrules (IM.fromList someirules) tbounds (error "sizebounds" `fromMaybe` sizebounds) costf 
           | otherwise = C.poly (inst startterm)
-          where costf f = C.poly . inst $ Term f (args startterm)
+          -- SW FIXME: monotonicity is not required. correct because poly takes abs, thus overestimates
+           where costf f = C.poly . inst $ Term f (args startterm)
 
         times = M.map (const costs) strictMap
 

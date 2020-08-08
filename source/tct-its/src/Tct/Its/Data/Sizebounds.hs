@@ -206,7 +206,7 @@ sizeboundsConstr irules sbounds lbounds rvgraph scc
         useful_bnds = [ p | p <- complex_bnds, not (C.Unknown == p) ]
       in
       if pre  == [] || length (rhs rl) > 1 || idx == Nothing || useful_bnds == [] then sbs
-      else (trace ("possible bnds " ++ show bnds ++ " cbns " ++ show complex_bnds) (M.insert rv (head useful_bnds) sbs))
+      else M.insert rv (head useful_bnds) sbs
 
 ppSizebounds :: Vars -> Sizebounds -> PP.Doc
 ppSizebounds vars sbounds = ppRVs vars (M.assocs sbounds) (\sbound -> [PP.pretty sbound])
