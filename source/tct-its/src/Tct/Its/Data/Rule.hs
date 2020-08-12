@@ -22,6 +22,7 @@ module Tct.Its.Data.Rule
   , Rules
   , Vars
 
+  , rename
   , renameWith
   , chain
 
@@ -119,7 +120,7 @@ variables :: Rule -> S.Set Var
 variables = foldRule (\acc r -> acc `S.union` S.fromList (P.variables r)) S.empty
 
 
--- | @match r1 r2@ matches the rhs of @r1@ with the lhs of @l2@.
+-- FIXME multiple rules as result
 chain :: Rule -> Rule -> Maybe Rule
 chain ru1 ru2
   | length (rhs ru1) /= 1 && length (rhs ru2) /= 1 = Nothing -- trace "no chain 2" 

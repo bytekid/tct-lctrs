@@ -38,6 +38,7 @@ module Tct.Its.Processor.Simplification
 import           Control.Monad
 import qualified Data.Graph.Inductive         as Gr
 import qualified Data.IntMap.Strict           as IM
+import qualified Data.Map.Strict              as M
 import qualified Data.Set                     as S
 import qualified Data.Traversable             as F
 
@@ -178,11 +179,11 @@ instance PP.Pretty RuleRemovalProof where
   pretty RuleRemovalProof{..} =
     case rproc_ of
       UnsatRules       ->
-        PP.text "Following transitions have unsatisfiable constraints and are removed: " PP.<+> PP.pretty rrules_
+        PP.text "The following transitions have unsatisfiable constraints and are removed: " PP.<+> PP.pretty rrules_
       UnreachableRules ->
-        PP.text "Following transitions are not reachable from the starting states and are removed:" PP.<+> PP.pretty rrules_
+        PP.text "The following transitions are not reachable from the starting states and are removed:" PP.<+> PP.pretty rrules_
       LeafRules ->
-        PP.text "Following transitions are estimated by its predecessors and are removed" PP.<+> PP.pretty rrules_
+        PP.text "The following transitions are estimated by its predecessors and are removed" PP.<+> PP.pretty rrules_
   pretty NoRuleRemovalProof{..} =
     case rproc_ of
       UnsatRules       -> PP.text "No constraint could have been show to be unsatisfiable. No rules are removed."
@@ -209,7 +210,7 @@ instance T.Processor RuleRemovalProcessor where
 solveUnsatRules :: Its -> T.TctM (T.Return RuleRemovalProcessor)
 solveUnsatRules prob = do
   unsats <- do
-    res <- F.sequence $ IM.map testUnsatRule' nrules
+    res <- F.sequence $ IM.map (testUnsatRule' . con) nrules
     return . IM.keys $ IM.filter id res
   if null unsats
     then progress NoProgress (Applicable (NoRuleRemovalProof p))
@@ -229,9 +230,9 @@ testUnsatRule (Rule _ _ cs) = do
   return (SMT.isUnsat s)
 
 -- use farkas lemma: try to derive C |= 0 >= 1
-testUnsatRule' :: Rule -> T.TctM Bool
-testUnsatRule' (Rule _ _ []) = return False
-testUnsatRule' (Rule _ _ cs) = do
+testUnsatRule' :: Constraint -> T.TctM Bool
+testUnsatRule' [] = return False
+testUnsatRule' cs = do
   s :: SMT.Result () <- SMT.smtSolveSt SMT.yices $ do
     let 
       absolute p              = SMT.bigAnd [ c SMT..== zero | c <- P.coefficients p ]
@@ -318,10 +319,21 @@ solveUnsatPaths prob = do
     irules = irules_ prob
 
     mkprob es = prob {tgraph_ = Gr.delEdges es tgraph}
-    solveUnsatPath (n1,n2) = case chain (irules IM.! n1) (irules IM.! n2) of
-      Nothing -> return False
-      Just r  -> testUnsatRule' r
+    solveUnsatPath (n1,n2) = foldM (\b c -> testUnsatRule' c >>= (\b2 -> return (b || b2))) False chainedCons
+      where chainedCons = chainConstraints (irules IM.! n1) (irules IM.! n2)
 
+chainConstraints :: Rule -> Rule -> [Constraint]
+chainConstraints ru1 ru2 = [cs1 ++ map (map (mapCon (subst r))) cs2 | r <- rhss]
+  where
+    Rule _ r1 cs1 = ru1
+    Rule l2 _ cs2 = rename ru1 ru2
+    rhss = [ r | r <- r1, fun r == fun l2 ]
+    lhsvs = concatMap P.variables (args l2)
+    subst1 = M.fromList [ (v, P.variable v) | v <- S.toList $ variables ru2 ]
+    subst2 r = foldl (\m (v,p) -> M.insert v p m) subst1 (zip lhsvs (args r))
+    subst r = (`P.substituteVariables` (subst2 r))
+    mapCon f (Eq p1 p2)  = Eq (f p1) (f p2)
+    mapCon f (Gte p1 p2) = Gte (f p1) (f p2)
 
 -- * argument filtering
 
