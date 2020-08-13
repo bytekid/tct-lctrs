@@ -74,7 +74,7 @@ def useAT useAF =
     .>>> try sizebounds
     .>>> te constantFarkas
     .>>> te farkas
-    .>>> te combineAll
+    -- .>>> te combineAll
     .>>> try loopRecurrence)
   .>>> try st
   -- .>>> withChaining st

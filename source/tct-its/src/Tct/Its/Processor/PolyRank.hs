@@ -359,7 +359,7 @@ entscheide proc prob@Its
         costs
           | withSize = computeBoundWithSize tgraph allrules (IM.fromList someirules) tbounds (error "sizebounds" `fromMaybe` sizebounds) costf 
           | otherwise = C.poly (inst startterm)
-          -- SW FIXME: monotonicity is not required. correct because poly takes abs, thus overestimates
+          -- SW monotonicity is not required. correct because poly takes abs, thus overestimates
            where costf f = C.poly . inst $ Term f (args startterm)
 
         times = M.map (const costs) strictMap
