@@ -317,7 +317,7 @@ solveSubproblem' prob t constr =
     subprob = initialise ([start_sym], vars, trace ("start " ++ show start_lhs ++ " vars: " ++ show vars) start_rule : reachable_rls)
     simple_strategy =
       try sizebounds
-      T..>>> te farkas
+      T..>>> te (farkas False)
       T..>>> try (withProblem $ \prob -> loopAnalysis "subproblem" (selNextSCCAny prob))
       T..>>> try knowledgePropagation
   in
