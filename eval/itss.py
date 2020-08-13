@@ -86,7 +86,7 @@ def accumulate(jobs):
   print("<body><table id=\"results\">")
   toolnames = ["<th>" + t + "</th>" for t in tools]
   print("<tr><th>&nbsp;</th>" + reduce(operator.add, toolnames, "") + "</tr>")
-  for r in jobs:
+  for r in sorted(jobs, key = lambda r: r["path"]):
     name = r["path"][len("koat-evaluation/examples/"):-5] # drop .koat
     print("<tr><td>" + name + "</td>")
     degrees = {}
