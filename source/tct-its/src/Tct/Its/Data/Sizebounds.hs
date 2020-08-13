@@ -144,7 +144,7 @@ combine sb r r' rnew =
     removed rv = rvRule rv `elem` [r,r']
     c' rv = case M.lookup (rv{rvRule = r'}) sb of {Just c -> c; _ -> Unknown }
     insert_max rv c m = M.insert rv{rvRule = rnew} (maximal c (c' rv)) m
-    ins_update rv c m = if rvRule rv == r then insert_max rv c m else m-- trace (" rv:" ++ show rv) (
+    ins_update rv c m = if rvRule rv == r then insert_max rv c m else m
     ins sb = M.foldrWithKey ins_update sb sb
     del_update rv _ m = if removed rv then M.delete rv m else m
   in
