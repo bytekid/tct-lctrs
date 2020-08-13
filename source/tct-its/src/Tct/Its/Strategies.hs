@@ -73,8 +73,7 @@ def useAT useAF =
     try simpl2
     .>>> try sizebounds
     .>>> te constantFarkas
-    .>>> te (farkas True)
-    .>>> te (farkas False)
+    .>>> te farkas
     -- .>>> te combineAll
     .>>> try loopRecurrence)
   .>>> try st
@@ -83,7 +82,7 @@ def useAT useAF =
   where
     st =
       try simpl2
-      .>>> te (withKnowledgePropagation (farkas False))
+      .>>> te (withKnowledgePropagation farkas)
       -- .>>> te (try sizebounds .>>> withKnowledgePropagation farkas)
       .>>> te (try sizebounds .>>> usingTimebounds)
     usingTimebounds = withProblem $

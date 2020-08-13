@@ -97,8 +97,8 @@ poly shp = T.Apply polyRankProcessor{ shape = shp}
 -- TODO: check exact behaviour if constraints are satisfied
 -- in _T2_eric3.koat we get a strict order 1 > 1; which is wrong in the proof
 -- yet the rule is not applicable
-farkas :: Bool -> ItsStrategy
-farkas b = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Linear, onlyBoundedVars = b }
+farkas :: ItsStrategy
+farkas = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Linear }
 
 constantFarkas :: ItsStrategy
 constantFarkas = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Constant }
@@ -113,7 +113,7 @@ polyDeclaration ::T.Declaration ('[ T.Argument 'T.Required PI.Shape ] T.:-> ItsS
 polyDeclaration = T.declare "poly" ["(non-linear) polynomial ranking function."] (T.OneTuple PI.shapeArg) poly
 
 farkasDeclaration ::T.Declaration ('[] T.:-> ItsStrategy)
-farkasDeclaration = T.declare "farkas" ["linear polynomial ranking function."] () (farkas False)
+farkasDeclaration = T.declare "farkas" ["linear polynomial ranking function."] () farkas
 
 constant, stronglyLinear, linear, quadratic :: ItsStrategy
 constant       = T.Apply polyRankProcessor{ shape = PI.Constant }
@@ -129,15 +129,13 @@ data PolyRankProcessor = PolyRank
   { useFarkas       :: Bool -- implies linear shape
   , withSizebounds  :: [RuleId]
   , shape           :: PI.Shape
-  , onlyBoundedVars :: Bool -- zero coefficients for non-size-bounded variables
   } deriving Show
 
 polyRankProcessor :: PolyRankProcessor
 polyRankProcessor = PolyRank
   { useFarkas       = False
   , withSizebounds  = []
-  , shape           = PI.Linear
-  , onlyBoundedVars = False }
+  , shape           = PI.Linear }
 
 type PolyInter   = PI.PolyInter Fun Int
 type IntPoly        = P.Polynomial Int Var
@@ -304,19 +302,12 @@ entscheide proc prob@Its
       coeffs = concat [ P.constantValue i : P.coefficients i | i <- inters ]
       -- SW: ensure that condition implies lhs non-negative (condition 3 in [BEFFG16, Def 3.1]) 
       nonneg_lhs (_, (Rule l _ cs)) = (interpretLhs l) `eliminateFarkas` interpretCon cs
-      unboundedVars = case sizebounds of
-        Just sb | onlyBoundedVars proc -> [rvVar rv | (rv, c) <- M.toList sb, c == C.Unknown ]
-        _ -> []
-      vars = M.fromList (zip (concat $ (map P.variables) $ args startterm) PI.indeterminates)
-      zerocoeffs = [ P.getCoefficient i [(vars M.! v, 1)] | v <- L.nub unboundedVars, i <- inters ]
 
     SMT.assert (SMT.top :: SMT.Formula Int)
     SMT.assert =<< SMT.bigAndM orderConstraint
     SMT.assert $ SMT.bigOr rulesConstraint
     SMT.assert $ SMT.maximize $ bigAdd [ strict i | i <- strictrules ]
     SMT.assert undefinedConstraint
-    SMT.assert undefinedConstraint
-    SMT.assert (SMT.bigAnd $ [ c SMT..== SMT.zero | c <- zerocoeffs])
     -- SW: if size bounds are used, monotonicity is required, otherwise not
     --     necessarily but lhss must be interpreted non-negative wrt constraints
     -- SW: fix: allow non-monotonicity, but fix afterwards interpretation of term
