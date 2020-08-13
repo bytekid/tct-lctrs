@@ -317,7 +317,7 @@ entscheide proc prob@Its
     SMT.assert undefinedConstraint
     SMT.assert undefinedConstraint
     SMT.assert (SMT.bigAnd $ [ c SMT..== SMT.zero | c <- zerocoeffs])
-    -- SW: if size bounds are used, monotonicity is required; otherwise not
+    -- SW: if size bounds are used, monotonicity is required, otherwise not
     --     necessarily but lhss must be interpreted non-negative wrt constraints
     -- SW: fix: allow non-monotonicity, but fix afterwards interpretation of term
     -- SMT.assert =<<
