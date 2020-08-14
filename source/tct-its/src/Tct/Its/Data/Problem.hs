@@ -59,7 +59,7 @@ data Its = Its
   , timebounds_      :: Timebounds
   , sizebounds_      :: Maybe Sizebounds
   , localSizebounds_ :: Maybe LocalSizebounds
-  , localConstraint_ :: Maybe (M.Map RuleId Constraint)
+  , locConstraints_  :: Maybe LocationConstraints
   } deriving (Show, Typeable)
 
 type ItsStrategy    = T.Strategy Its Its
@@ -82,7 +82,7 @@ initialise ([fs],_, rsl) = Its
   , timebounds_      = TB.initialise (IM.keys allRules) (IM.keys startRules)
   , sizebounds_      = Nothing
   , localSizebounds_ = Nothing 
-  , localConstraint_ = Nothing }
+  , locConstraints_  = Nothing }
   where
     allRules   = IM.fromList $ zip [0..] rsl
     startRules = IM.filter (\r -> fun (lhs r) == fs) allRules
@@ -106,25 +106,25 @@ validate prob = all validRule $ IM.elems (irules_ prob)
 
 removeRules :: [RuleId] -> Its -> Its
 removeRules irs prob = prob
-  { irules_          = IM.filterWithKey (\k _ -> k `notElem` irs) (irules_ prob)
-  , tgraph_          = TG.deleteNodes irs (tgraph_ prob)
+  { irules_              = IM.filterWithKey (\k _ -> k `notElem` irs) (irules_ prob)
+  , tgraph_              = TG.deleteNodes irs (tgraph_ prob)
   -- MS: TODO filter wrt to labels
   , rvgraph_         = Nothing
   , timebounds_      = TB.filterRules (`notElem` irs) (timebounds_ prob)
   , sizebounds_      = M.filterWithKey (\rv _ -> rvRule rv `notElem` irs) `fmap` sizebounds_ prob
   , localSizebounds_ = M.filterWithKey (\rv _ -> rvRule rv `notElem` irs) `fmap` localSizebounds_ prob 
-  , localConstraint_ = M.filterWithKey (\rid _ -> rid `notElem` irs) `fmap` localConstraint_ prob }
+  , locConstraints_  = M.filterWithKey (\rid _ -> rid `notElem` irs) `fmap` locConstraints_ prob }
 
 restrictRules :: [RuleId] -> Its -> Its
 restrictRules irs prob = prob
-  { irules_          = IM.filterWithKey (\k _ -> k `elem` irs) (irules_ prob)
-  , tgraph_          = TG.restrictToNodes irs (tgraph_ prob)
+  { irules_              = IM.filterWithKey (\k _ -> k `elem` irs) (irules_ prob)
+  , tgraph_              = TG.restrictToNodes irs (tgraph_ prob)
   -- MS: TODO restrict to labels
   , rvgraph_         = Nothing
   , timebounds_      = TB.filterRules (`elem` irs) (timebounds_ prob)
   , sizebounds_      = M.filterWithKey (\rv _ -> rvRule rv `elem` irs) `fmap` sizebounds_ prob
   , localSizebounds_ = M.filterWithKey (\rv _ -> rvRule rv `elem` irs) `fmap` localSizebounds_ prob
-  , localConstraint_ = M.filterWithKey (\rid _ -> rid `elem` irs) `fmap` localConstraint_ prob }
+  , locConstraints_  = M.filterWithKey (\rid _ -> rid `elem` irs) `fmap` locConstraints_ prob }
 
 {-rvss :: Vars -> Rules -> [RV]-}
 {-rvss vs = concatMap k-}

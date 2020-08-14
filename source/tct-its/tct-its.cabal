@@ -67,6 +67,7 @@ Library
     Tct.Its.Processor.Chaining
     Tct.Its.Processor.Combine
     Tct.Its.Processor.Empty
+    Tct.Its.Processor.LocationConstraints
     Tct.Its.Processor.LoopRecurrence
     Tct.Its.Processor.PathAnalysis
     Tct.Its.Processor.TransitionPredicateAbstraction

@@ -62,6 +62,8 @@ type Constraint = AConstraint Var
 type Rule = ARule Fun Var
 type RV' = (RuleId, ComId)
 
+type LocationConstraints = M.Map RuleId Constraint
+
 rules :: Rules -> [Rule]
 rules = IM.elems 
 
