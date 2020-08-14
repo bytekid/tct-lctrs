@@ -59,6 +59,7 @@ data Its = Its
   , timebounds_      :: Timebounds
   , sizebounds_      :: Maybe Sizebounds
   , localSizebounds_ :: Maybe LocalSizebounds
+  , localConstraint_ :: Maybe (M.Map RuleId Constraint)
   } deriving (Show, Typeable)
 
 type ItsStrategy    = T.Strategy Its Its
@@ -80,7 +81,8 @@ initialise ([fs],_, rsl) = Its
 
   , timebounds_      = TB.initialise (IM.keys allRules) (IM.keys startRules)
   , sizebounds_      = Nothing
-  , localSizebounds_ = Nothing }
+  , localSizebounds_ = Nothing 
+  , localConstraint_ = Nothing }
   where
     allRules   = IM.fromList $ zip [0..] rsl
     startRules = IM.filter (\r -> fun (lhs r) == fs) allRules
@@ -110,7 +112,8 @@ removeRules irs prob = prob
   , rvgraph_         = Nothing
   , timebounds_      = TB.filterRules (`notElem` irs) (timebounds_ prob)
   , sizebounds_      = M.filterWithKey (\rv _ -> rvRule rv `notElem` irs) `fmap` sizebounds_ prob
-  , localSizebounds_ = M.filterWithKey (\rv _ -> rvRule rv `notElem` irs) `fmap` localSizebounds_ prob }
+  , localSizebounds_ = M.filterWithKey (\rv _ -> rvRule rv `notElem` irs) `fmap` localSizebounds_ prob 
+  , localConstraint_ = M.filterWithKey (\rid _ -> rid `notElem` irs) `fmap` localConstraint_ prob }
 
 restrictRules :: [RuleId] -> Its -> Its
 restrictRules irs prob = prob
@@ -120,7 +123,8 @@ restrictRules irs prob = prob
   , rvgraph_         = Nothing
   , timebounds_      = TB.filterRules (`elem` irs) (timebounds_ prob)
   , sizebounds_      = M.filterWithKey (\rv _ -> rvRule rv `elem` irs) `fmap` sizebounds_ prob
-  , localSizebounds_ = M.filterWithKey (\rv _ -> rvRule rv `elem` irs) `fmap` localSizebounds_ prob }
+  , localSizebounds_ = M.filterWithKey (\rv _ -> rvRule rv `elem` irs) `fmap` localSizebounds_ prob
+  , localConstraint_ = M.filterWithKey (\rid _ -> rid `elem` irs) `fmap` localConstraint_ prob }
 
 {-rvss :: Vars -> Rules -> [RV]-}
 {-rvss vs = concatMap k-}
