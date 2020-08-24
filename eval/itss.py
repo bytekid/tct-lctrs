@@ -36,12 +36,34 @@ results tr:hover {background-color: #ddd;}\
 #results td.summary { font-weight:bold }\
 </style>"
 
-
+resdir = "results"
 htmlresult = ""
 def htmlprint(s):
   global htmlresult
   htmlresult = htmlresult + "\n" + s
   print(s)
+
+def dump_html(currenthead):
+  global htmlresult, resdir
+  rfile = open(resdir + "/" + currenthead + ".html", "w")
+  rfile.write(htmlresult)
+
+def dump_json(currenthead, jobs):
+  global resdir
+  res = json.dumps(jobs, sort_keys=True, indent=2)
+  rname = currenthead + ".json" # t.strftime('%Y-%m-%d') + 
+  if not os.path.exists(resdir):
+    os.makedirs(resdir)
+  rfile = open(resdir + "/" + rname, "w")
+  rfile.write(res)
+
+def get_git_heads():
+  githead = subprocess.run(['git', 'log', '--pretty=format:\'%h\'', '-n', '2'], stdout=subprocess.PIPE)
+  heads = githead.stdout.decode('utf-8').splitlines()
+  currenthead = heads[0].strip("'")
+  lasthead = heads[0].strip("'")
+  htmlprint("<!-- git head " + currenthead + " -->")
+  return [currenthead, lasthead]
 
 def check(job):
   p = job["problem"]
@@ -122,25 +144,10 @@ def accumulate(jobs):
 
   htmlprint("</table></body></html>")
 
-  # dump into json
-  res = json.dumps(jobs, sort_keys=True, indent=2)
-  githead = subprocess.run(['git', 'log', '--pretty=format:\'%h\'', '-n', '2'], stdout=subprocess.PIPE)
-  heads = githead.stdout.decode('utf-8').splitlines()
-  print(heads)
-  currenthead = heads[0].strip("'")
-  lasthead = heads[0].strip("'")
-  htmlprint("<!-- git head " + currenthead + " -->")
-
-  resdir = "results"
-  rname = currenthead + ".json" # t.strftime('%Y-%m-%d') + 
-  if not os.path.exists(resdir):
-    os.makedirs(resdir)
-  rfile = open(resdir + "/" + rname, "w")
-  rfile.write(res)
-
-  global htmlresult
-  rfile = open(resdir + "/" + currenthead + ".html", "w")
-  rfile.write(htmlresult)
+  # dump results into json
+  [currenthead, lasthead] = get_git_heads()
+  dump_json(currenthead, jobs)
+  dump_html(currenthead)
 
   return summary
 
