@@ -64,6 +64,7 @@ def dump_json(currenthead, jobs):
 def compare_versions(jobs, cmphead):
   global resdir
   cmpjson = resdir + "/" + cmphead + ".json"
+  print("compare with " + str(cmphead))
   if not os.path.exists(cmpjson):
     print("no comparison result file found")
     return
@@ -95,8 +96,8 @@ def get_git_heads():
   githead = subprocess.run(['git', 'log', '--pretty=format:\'%h\'', '-n', '2'], stdout=subprocess.PIPE)
   heads = githead.stdout.decode('utf-8').splitlines()
   currenthead = heads[0].strip("'")
-  lasthead = heads[0].strip("'")
-  htmlcomment("git head " + currenthead)
+  lasthead = heads[1].strip("'")
+  htmlcomment("current git head " + currenthead)
   return [currenthead, lasthead]
 
 def check(job):
