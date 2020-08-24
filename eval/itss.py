@@ -43,6 +43,9 @@ def htmlprint(s):
   htmlresult = htmlresult + "\n" + s
   print(s)
 
+def htmlcomment(s):
+  htmlprint("<!-- " + s + " -->")
+
 def dump_html(currenthead):
   global htmlresult, resdir
   rfile = open(resdir + "/" + currenthead + ".html", "w")
@@ -50,19 +53,50 @@ def dump_html(currenthead):
 
 def dump_json(currenthead, jobs):
   global resdir
-  res = json.dumps(jobs, sort_keys=True, indent=2)
+  data = dict([ (j['path'], j) for j in jobs ])
+  res = json.dumps(data, sort_keys=True, indent=2)
   rname = currenthead + ".json" # t.strftime('%Y-%m-%d') + 
   if not os.path.exists(resdir):
     os.makedirs(resdir)
   rfile = open(resdir + "/" + rname, "w")
   rfile.write(res)
 
+def compare_versions(jobs, cmphead):
+  global resdir
+  cmpjson = resdir + "/" + cmphead + ".json"
+  if not os.path.exists(cmpjson):
+    print("no comparison result file found")
+    return
+  
+  cmpfile = open(cmpjson, "r") 
+  cmpres = cmpfile.read()
+  cmpdata = json.loads(cmpres)
+  data = dict([ (j['path'], j) for j in jobs ])
+
+  def success(p, d):
+    return "degree" in d[p]
+
+  def fail(p, d):
+    return not success(p, d)
+
+  def differ(p):
+    return success(p, data) and success(p, cmpdata) and data[p]["degree"] != cmpdata[p]["degree"]
+
+  gained = [ p for p in data.keys() if success(p, data) and fail(p, cmpdata)]
+  lost = [ p for p in data.keys() if success(p, cmpdata) and fail(p, data)]
+  differ = [ (p, data[p]["degree"], cmpdata[p]["degree"]) for p in data.keys() if differ(p)]
+  htmlcomment("gained: " + reduce(lambda p, s: s + " " + p, gained, ""))
+  htmlcomment("lost: " + reduce(lambda p, s: s + " " + p, lost, ""))
+  htmlcomment("different: " + reduce(lambda p, s: s + " " + str(p), differ, ""))
+
+
+ 
 def get_git_heads():
   githead = subprocess.run(['git', 'log', '--pretty=format:\'%h\'', '-n', '2'], stdout=subprocess.PIPE)
   heads = githead.stdout.decode('utf-8').splitlines()
   currenthead = heads[0].strip("'")
   lasthead = heads[0].strip("'")
-  htmlprint("<!-- git head " + currenthead + " -->")
+  htmlcomment("git head " + currenthead)
   return [currenthead, lasthead]
 
 def check(job):
@@ -107,7 +141,7 @@ def check(job):
     job["errors"] = True
   return job
 
-def accumulate(jobs):
+def accumulate(jobs, cmphead):
   summary= {}
   tools = ["TCT", "KoAT", "CoFloCo", "PUBS"]
   for tool in tools:
@@ -142,10 +176,14 @@ def accumulate(jobs):
   mins = ["<td>" + str(summary[t]["min"]) + "</td>" for t in tools]
   htmlprint(trsumm + "<td>minimal</td>" + reduce(operator.add, mins, "") + "</tr>")
 
+  [currenthead, lasthead] = get_git_heads()
+  if cmphead is None:
+    cmphead = lasthead
+  compare_versions(jobs, cmphead)
+
   htmlprint("</table></body></html>")
 
   # dump results into json
-  [currenthead, lasthead] = get_git_heads()
   dump_json(currenthead, jobs)
   dump_html(currenthead)
 
@@ -156,6 +194,8 @@ if __name__ == "__main__":
   if len(sys.argv) < 2:
     print("example dir needed")
   exampledir = sys.argv[1]
+
+  comparehead = sys.argv[2] if len(sys.argv) > 2 else None
 
   # collect jobs
   jobs = []
@@ -174,7 +214,7 @@ if __name__ == "__main__":
   pool.close()
   pool.join()
   print("-->")
-  summary = accumulate(tctresults.get())
+  summary = accumulate(tctresults.get(), comparehead)
 
   #results = []
   #for j in jobs:
