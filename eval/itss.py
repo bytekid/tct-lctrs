@@ -36,6 +36,13 @@ results tr:hover {background-color: #ddd;}\
 #results td.summary { font-weight:bold }\
 </style>"
 
+
+htmlresult = ""
+def htmlprint(s):
+  global htmlresult
+  htmlresult = htmlresult + "\n" + s
+  print(s)
+
 def check(job):
   p = job["problem"]
   fname = job["path"]
@@ -83,24 +90,24 @@ def accumulate(jobs):
   tools = ["TCT", "KoAT", "CoFloCo", "PUBS"]
   for tool in tools:
     summary[tool] = {"solved": 0, "min": 0}
-  print("<html>" + style)
-  print("<body><table id=\"results\">")
+  htmlprint("<html>" + style)
+  htmlprint("<body><table id=\"results\">")
   toolnames = ["<th>" + t + "</th>" for t in tools]
-  print("<tr><th>&nbsp;</th>" + reduce(operator.add, toolnames, "") + "</tr>")
+  htmlprint("<tr><th>&nbsp;</th>" + reduce(operator.add, toolnames, "") + "</tr>")
   for r in sorted(jobs, key = lambda r: r["path"]):
     name = r["path"][len("koat-evaluation/examples/"):-5] # drop .koat
-    print("<tr><td>" + name + "</td>")
+    htmlprint("<tr><td>" + name + "</td>")
     degrees = {}
     # TCT
     degrees["TCT"] = r["degree"] if "degree" in r else None
-    print("<td>" + ("?" if degrees["TCT"] is None else str(degrees["TCT"])) + "</td>")
+    htmlprint("<td>" + ("?" if degrees["TCT"] is None else str(degrees["TCT"])) + "</td>")
     
     # other tools
     for tool in tools[1:]:
       tresult = results[tool][name]
       degrees[tool] = tresult["degree"] if "degree" in tresult else None
-      print("<td>" + ("?" if degrees[tool] is None else str(degrees[tool])) + "</td>")
-    print("</tr>")
+      htmlprint("<td>" + ("?" if degrees[tool] is None else str(degrees[tool])) + "</td>")
+    htmlprint("</tr>")
 
     m = min([d for d in degrees.values() if not (d is None)] + [10001])
     for tool in tools:
@@ -109,11 +116,11 @@ def accumulate(jobs):
 
   solveds = ["<td style=\"summary\">" + str(summary[t]["solved"]) + "</td>" for t in tools]
   trsumm= "<tr>"
-  print(trsumm + "<td style=\"summary\">solved</td>" + reduce(operator.add, solveds, "") + "</tr>")
+  htmlprint(trsumm + "<td style=\"summary\">solved</td>" + reduce(operator.add, solveds, "") + "</tr>")
   mins = ["<td>" + str(summary[t]["min"]) + "</td>" for t in tools]
-  print(trsumm + "<td>minimal</td>" + reduce(operator.add, mins, "") + "</tr>")
+  htmlprint(trsumm + "<td>minimal</td>" + reduce(operator.add, mins, "") + "</tr>")
 
-  print("</table></body></html>")
+  htmlprint("</table></body></html>")
 
   # dump into json
   res = json.dumps(jobs, sort_keys=True, indent=2)
@@ -122,14 +129,18 @@ def accumulate(jobs):
   print(heads)
   currenthead = heads[0].strip("'")
   lasthead = heads[0].strip("'")
-  print("<!-- git head " + currenthead + " -->")
+  htmlprint("<!-- git head " + currenthead + " -->")
 
-  resdir = "jsonresults"
+  resdir = "results"
   rname = currenthead + ".json" # t.strftime('%Y-%m-%d') + 
   if not os.path.exists(resdir):
     os.makedirs(resdir)
   rfile = open(resdir + "/" + rname, "w")
   rfile.write(res)
+
+  global htmlresult
+  rfile = open(resdir + "/" + currenthead + ".html", "w")
+  rfile.write(htmlresult)
 
   return summary
 
@@ -163,8 +174,6 @@ if __name__ == "__main__":
   #  results.append(check(j))
 
   l = len(jobs)
-  print("<!-- SUMMARY: ")
   for t in summary.keys():
     print("  %s: %d/%d solved (%d min)" % (t, summary[t]["solved"], l, summary[t]["min"]))
-  print("-->")
   
