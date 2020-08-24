@@ -1,6 +1,6 @@
 import os, subprocess, multiprocessing, sys
 import time
-from os import listdir
+from os import listdir, system
 from os.path import isfile, join
 import re
 import sys
@@ -8,6 +8,7 @@ from functools import reduce
 import operator
 sys.path.append('.')
 from results import Results
+import json
 
 global results 
 results = Results.data
@@ -113,6 +114,22 @@ def accumulate(jobs):
   print(trsumm + "<td>minimal</td>" + reduce(operator.add, mins, "") + "</tr>")
 
   print("</table></body></html>")
+
+  # dump into json
+  res = json.dumps(jobs, sort_keys=True, indent=2)
+  githead = subprocess.run(['git', 'log', '--pretty=format:\'%h\'', '-n', '2'], stdout=subprocess.PIPE)
+  heads = githead.stdout.decode('utf-8').splitlines()
+  print(heads)
+  currenthead = heads[0].strip("'")
+  lasthead = heads[0].strip("'")
+  print("<!-- git head " + currenthead + " -->")
+
+  resdir = "jsonresults"
+  rname = currenthead + ".json" # t.strftime('%Y-%m-%d') + 
+  if not os.path.exists(resdir):
+    os.makedirs(resdir)
+  rfile = open(resdir + "/" + rname, "w")
+  rfile.write(res)
 
   return summary
 
