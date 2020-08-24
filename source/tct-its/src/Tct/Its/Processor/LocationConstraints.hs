@@ -66,7 +66,7 @@ initialiseLocationConstraints prob = case locConstraints_ prob of
   Just _ ->  return prob
   Nothing -> return (prob { locConstraints_ = Just lcs })
   where
-    lcs = foldl (\lcs r -> M.insert r (compute_lcs (trace ("compute for rule id " ++ show r) r)) lcs) M.empty (rulesIds (irules_ prob))
+    lcs = foldl (\lcs r -> M.insert r (compute_lcs r) lcs) M.empty (rulesIds (irules_ prob))
     compute_lcs rid2 = let
         rl2 = irules_ prob IM.! rid2
         pres = [ (src,tgt) | (src,tgt) <- Gr.lpre (tgraph_ prob) rid2, src /= rid2 ]
@@ -81,7 +81,6 @@ initialiseLocationConstraints prob = case locConstraints_ prob of
           in
           [[ c | c <- head (con rl1), vars c `S.isSubsetOf` unchanged ]]
       in
-      case trace (show rid2 ++ ": " ++ show pres) pres of
+      case pres of
         [(p, _)] | single_rhs p && conj_constr p -> prop_constr p
-        [(p, _)] -> trace ("single rhs " ++ show (single_rhs p) ++ " conj constr" ++ show (conj_constr p)) []
-        _ -> trace ("not singleton list ") []
+        _ -> []
