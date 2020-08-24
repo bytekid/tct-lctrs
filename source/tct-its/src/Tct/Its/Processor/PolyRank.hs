@@ -248,7 +248,7 @@ entscheide proc prob@Its
 
 
     let -- generalised farkas
-      decrease (i,Rule l rs cs) = pl `eliminate` interpretCon cs
+      decrease (i,Rule l rs cs) = pl `eliminate` interpretCon (add_lconstr i cs)
         where pl = (interpretRhs rs `add` P.constant (strict i)) `sub` interpretLhs l
       bounded (Rule l _ cs) = eliminate pl (interpretCon cs)
         where pl = neg $ interpretLhs l `sub` P.constant one
