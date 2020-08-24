@@ -72,6 +72,7 @@ def useAT useAF =
   .>>> afterChaining (
     try simpl2
     .>>> try sizebounds
+    .>>> try locationConstraints
     .>>> te constantFarkas
     .>>> te farkas
     -- .>>> te combineAll

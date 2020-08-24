@@ -262,7 +262,7 @@ entscheide proc prob@Its
 
     let -- farkas
       -- TODO: handle non-linear expressions on rhs
-      decreaseFarkas (i,Rule l rs cs) = pl `eliminateFarkas` interpretCon (filterLinear cs)
+      decreaseFarkas (i,Rule l rs cs) = pl `eliminateFarkas` interpretCon (filterLinear (add_lconstr i cs))
         where pl = interpretLhs l `sub` (interpretRhs rs `add` P.constant (strict i))
       boundedFarkas (Rule l _ cs) = pl `eliminateFarkas` interpretCon (filterLinear cs)
         where pl = interpretLhs l `sub` P.constant one
@@ -336,6 +336,7 @@ entscheide proc prob@Its
     sig = restrictSignature (S.fromList $ funs somerules) (signature_ prob)
     funs = foldl (\fs (Rule l r _) -> fun l : map fun r ++ fs) []
     shp = shape proc
+    add_lconstr i cs = case locConstraints_ prob of { Just lcs -> lcs M.! i ++ cs; _ -> cs }
 
     interpret ebsi = interpretTerm interpretFun interpretArg
       where
