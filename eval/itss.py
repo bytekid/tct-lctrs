@@ -119,12 +119,12 @@ def check(job):
     complexity_str = "O(" + complexity + ")"
     degrees = {
       "1" : 0.,
-      "log(n)" : .5,
       "n^1" : 1.,
       "log(n)*n^1" : 1.5,
       "n^2" : 2.,
       "log(n)*n^2" : 2.5,
       "log(n)^2*n^2" : 2.75,
+      "log(n)" : .5,
       "n^3" : 3.,
       "n^4" : 4.,
     }
