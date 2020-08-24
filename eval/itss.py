@@ -64,7 +64,7 @@ def dump_json(currenthead, jobs):
 def compare_versions(jobs, cmphead):
   global resdir
   cmpjson = resdir + "/" + cmphead + ".json"
-  print("compare with " + str(cmphead))
+  htmlcomment("compare with " + str(cmphead))
   if not os.path.exists(cmpjson):
     print("no comparison result file found")
     return
@@ -88,7 +88,8 @@ def compare_versions(jobs, cmphead):
   differ = [ (p, data[p]["degree"], cmpdata[p]["degree"]) for p in data.keys() if differ(p)]
   htmlcomment("gained: " + reduce(lambda p, s: s + " " + p, gained, ""))
   htmlcomment("lost: " + reduce(lambda p, s: s + " " + p, lost, ""))
-  htmlcomment("different: " + reduce(lambda p, s: s + " " + str(p), differ, ""))
+  htmlcomment("different: " + reduce(lambda p, s: s + " " + str(p[0]) + "(" + \
+    str(p[1]) + " vs " + str(p[2]) + ")", differ, ""))
 
 
  
