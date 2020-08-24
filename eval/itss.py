@@ -88,7 +88,7 @@ def compare_versions(jobs, cmphead):
   differ = [ (p, data[p]["degree"], cmpdata[p]["degree"]) for p in data.keys() if differ(p)]
   htmlcomment("gained: " + reduce(lambda p, s: s + " " + p, gained, ""))
   htmlcomment("lost: " + reduce(lambda p, s: s + " " + p, lost, ""))
-  htmlcomment("different: " + reduce(lambda p, s: s + " " + str(p[0]) + "(" + \
+  htmlcomment("different: " + reduce(lambda s, p: s + " " + str(p[0]) + "(" + \
     str(p[1]) + " vs " + str(p[2]) + ")", differ, ""))
 
 
