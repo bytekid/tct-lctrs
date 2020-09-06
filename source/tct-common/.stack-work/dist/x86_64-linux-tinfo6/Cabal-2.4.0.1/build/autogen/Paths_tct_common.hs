@@ -29,12 +29,12 @@ version :: Version
 version = Version [3,3,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
-bindir     = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/d278d82eda51f8c8323636fcf27e419c3dd15536604f018e2aa08915c047f945/8.6.5/bin"
-libdir     = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/d278d82eda51f8c8323636fcf27e419c3dd15536604f018e2aa08915c047f945/8.6.5/lib/x86_64-linux-ghc-8.6.5/tct-common-3.3.0-3XAP4S4EE2GBSi6uAprw9E"
-dynlibdir  = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/d278d82eda51f8c8323636fcf27e419c3dd15536604f018e2aa08915c047f945/8.6.5/lib/x86_64-linux-ghc-8.6.5"
-datadir    = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/d278d82eda51f8c8323636fcf27e419c3dd15536604f018e2aa08915c047f945/8.6.5/share/x86_64-linux-ghc-8.6.5/tct-common-3.3.0"
-libexecdir = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/d278d82eda51f8c8323636fcf27e419c3dd15536604f018e2aa08915c047f945/8.6.5/libexec/x86_64-linux-ghc-8.6.5/tct-common-3.3.0"
-sysconfdir = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/d278d82eda51f8c8323636fcf27e419c3dd15536604f018e2aa08915c047f945/8.6.5/etc"
+bindir     = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/8aea721a0daa290b11a720a2acb584e86c5b0e9645eae081b2a5d91530921e3e/8.6.5/bin"
+libdir     = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/8aea721a0daa290b11a720a2acb584e86c5b0e9645eae081b2a5d91530921e3e/8.6.5/lib/x86_64-linux-ghc-8.6.5/tct-common-3.3.0-3XAP4S4EE2GBSi6uAprw9E"
+dynlibdir  = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/8aea721a0daa290b11a720a2acb584e86c5b0e9645eae081b2a5d91530921e3e/8.6.5/lib/x86_64-linux-ghc-8.6.5"
+datadir    = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/8aea721a0daa290b11a720a2acb584e86c5b0e9645eae081b2a5d91530921e3e/8.6.5/share/x86_64-linux-ghc-8.6.5/tct-common-3.3.0"
+libexecdir = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/8aea721a0daa290b11a720a2acb584e86c5b0e9645eae081b2a5d91530921e3e/8.6.5/libexec/x86_64-linux-ghc-8.6.5/tct-common-3.3.0"
+sysconfdir = "/home/bytekid/tools/tct-lctrs/.stack-work/install/x86_64-linux-tinfo6/8aea721a0daa290b11a720a2acb584e86c5b0e9645eae081b2a5d91530921e3e/8.6.5/etc"
 
 getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: IO FilePath
 getBinDir = catchIO (getEnv "tct_common_bindir") (\_ -> return bindir)

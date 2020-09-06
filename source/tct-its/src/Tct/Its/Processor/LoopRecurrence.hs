@@ -2,6 +2,7 @@
 
 module Tct.Its.Processor.LoopRecurrence
   ( loopAnalysis
+  , hasRecPotential
   , maxLoopCost
   , maxLoopOuts
   ) where
@@ -433,7 +434,14 @@ findInitCond _ constr  =
         x : _ -> case solvePolys x p1 p2 of {Just e -> Just (x,e); _ -> Nothing}
         [] -> Nothing
     check (Eq _ _) = Nothing
-      
+
+    
+hasRecPotential :: Its -> Bool
+hasRecPotential prob = not (null multcons)
+  where
+    multcons = [ c | Rule _ _ c <- IM.elems (irules_ prob), not (null (multcon c)) ]
+    multcon cc = [p | c <- cc, Gte _ p <- c, nontriv_coeffs p ] ++ [p | c <- cc, Eq q p <- c, nontriv_coeffs p || nontriv_coeffs q ]
+    nontriv_coeffs p = let (q,_) = P.splitConstantValue p in not (null [c | c <- P.coefficients q, c > 1])
 
 maxLoopCost :: Int -> Its -> RuleId -> Bool
 maxLoopCost n prob r = TB.tcostOf (timebounds_ prob) r <=  n

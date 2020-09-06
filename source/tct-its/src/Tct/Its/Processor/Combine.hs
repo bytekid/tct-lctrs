@@ -1,8 +1,10 @@
 module Tct.Its.Processor.Combine
   ( combine
+  , combineExhaust
   ) where
 
 import           Control.Monad
+import qualified Data.Map.Strict              as M
 import qualified Data.IntMap.Strict           as IM
 
 import qualified Tct.Core.Common.Pretty       as PP
@@ -57,6 +59,11 @@ instance T.Processor CombineProcessor where
       Nothing              -> progress NoProgress (Applicable NoCombinationProof)
       Just (nprob, pproof) -> progress (Progress nprob) (Applicable pproof)
 
+combineExhaust :: Its -> Its
+combineExhaust prob =
+  case foldl (\acc r -> acc `mplus` combineOne prob r) Nothing (IM.keys (irules_ prob)) of
+    Nothing              -> prob
+    Just (nprob, pproof) -> combineExhaust nprob
 
 combineOne :: Its -> RuleId -> Maybe (Its, CombinationProof)
 combineOne prob ruleid = do
@@ -76,6 +83,9 @@ combineOne prob ruleid = do
         newrules = IM.insert nextid nrule (IM.delete ruleid2 (IM.delete ruleid irules))
         tb' = TB.combine ruleid ruleid2 nextid (timebounds_ prob)
         sb = sizebounds_ prob
+        lcs = case locConstraints_ prob of
+          Nothing -> Nothing
+          Just lcsm -> Just (M.insert nextid (lcsm M.! ruleid) lcsm)
         sb' = case sb of {Just sbm -> Just (SB.combine sbm ruleid ruleid2 nextid); _ -> Nothing}
         nprob = prob
           { irules_          = newrules
@@ -83,7 +93,8 @@ combineOne prob ruleid = do
           , timebounds_      = tb'
           , localSizebounds_ = Nothing
           , rvgraph_         = Nothing
-          , sizebounds_      = sb'}
+          , sizebounds_      = sb'
+          , locConstraints_  = lcs }
       Just (nprob, CombinationProof [ruleid, ruleid2] nextid)
 
 

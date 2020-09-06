@@ -75,7 +75,7 @@ def useAT useAF =
     .>>> try locationConstraints
     .>>> te constantFarkas
     .>>> te farkas
-    .>>> try (te combineAll .>>> loopRecurrence)) -- combine without loop very bad, -30
+    .>>> try (withProblem $ \prob -> when (hasRecPotential prob) (te combineAll) .>>> loopRecurrence))
   .>>> try st
   -- .>>> withChaining st
   .>>> empty
@@ -87,7 +87,6 @@ def useAT useAF =
       .>>> te (try sizebounds .>>> usingTimebounds)
     usingTimebounds = withProblem $
       \prob -> es $ fastestN 8 [ withKnowledgePropagation (timebounds c) | c <- timeboundsCandidates (selNextSCC prob)]
-
 
 -- FIXME: boundtrivialsccs is not always 1 in the recursive case; take max label
 simpl1 :: ItsStrategy
@@ -106,7 +105,7 @@ simpl2 = force $
 --   where af = withProblem (argumentFilter . unusedFilter)
 
 loopRecurrence :: ItsStrategy
-loopRecurrence = withProblem $ \prob -> foldl try_scc identity (sccs prob)
+loopRecurrence = withProblem (\prob -> foldl try_scc identity (sccs prob))
   where
     sccs prob = TG.nonTrivialSCCs (tgraph_ prob)
     try_scc s scc = s .>>> try (loopAnalysis "toplevel" scc)
