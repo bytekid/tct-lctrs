@@ -75,7 +75,7 @@ def useAT useAF =
     .>>> try locationConstraints
     .>>> te constantFarkas
     .>>> te farkas
-    -- .>>> te combineAll
+    .>>> te combineAll
     .>>> try loopRecurrence)
   .>>> try st
   -- .>>> withChaining st
