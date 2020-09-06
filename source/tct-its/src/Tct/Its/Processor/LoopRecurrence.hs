@@ -147,7 +147,7 @@ loopAnalysis s = trace ("loopAnalysis " ++ s) (T.Apply . LoopRecurrenceProcessor
 loopCheck :: Its -> [RuleId] -> T.TctM (Maybe (Its, LoopRecurrenceProof))
 loopCheck prob rs =
   case (rs, sizebounds_ prob) of 
-    ([rid], Just sbounds) -> loopCheck' (trace ("go into loop check " ++ show (TB.totalBound (timebounds_ prob))) prob) rid sbounds
+    ([rid], Just sbounds) -> loopCheck' prob rid sbounds
     _ -> return (trace ("loop analysis seems to require chaining " ++ show rs ++ " " ++ (show (sizebounds_ prob == Nothing))) Nothing) -- FIXME: also support the case without chaining? (but sizebounds are needed)
 
 
