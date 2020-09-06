@@ -82,8 +82,8 @@ chainOne onlySingle prob r = do
     succs_groups1 = [ g | g <- succs_groups, not (any (\r -> isSelfLoop (irules IM.! r)) g)]
     -- if there are multiple terms on rhs, replace only one symbol/argument
     the_succs = if length (rhs rrule) == 1 then succs1 else head succs_groups1
-    long_succ = any (\rid -> length (rhs (irules IM.! rid)) > 1) succs
-  msuccs <- if onlySingle || succs_groups1 == [] || long_succ then Nothing else Just the_succs
+    long_succ = any (\rid -> length (rhs (irules IM.! rid)) > 1) the_succs
+  msuccs <- if onlySingle || succs_groups1 == [] || long_succ || the_succs == [] then Nothing else Just the_succs
   nrules <- forM msuccs (chain rrule . (irules IM.!))
   let
     nextid = maximum (IM.keys irules) + 1
