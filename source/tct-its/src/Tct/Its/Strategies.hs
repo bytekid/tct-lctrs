@@ -124,10 +124,6 @@ innerChainingAll :: ItsStrategy
 innerChainingAll = withProblem $ \prob -> chaining . chainingCandidates k prob $ (\p -> IM.keys (irules_ p)) prob
   where k prob r = maxCost 10 prob r && maxOuts 10 prob r
 
-innerChainingSingle :: ItsStrategy
-innerChainingSingle = withProblem $ \prob -> chaining1 . chainingCandidates k prob $ (\p -> IM.keys (irules_ p)) prob
-  where k prob r = maxCost 10 prob r && maxOuts 10 prob r
-
 outerChaining :: ItsStrategy
 outerChaining = withProblem $ \prob -> chaining . chainingCandidates k prob $ selToNextSCC prob
   where k prob r = isUnknown prob r && maxCost 30 prob r && maxOuts 8 prob r
@@ -138,7 +134,6 @@ withChaining st = exhaustivelyN ?maxChain  $ try st .>>> (exhaustivelyN ?nInChai
 afterChaining :: (?maxChain :: Int, ?nInChain :: Int, ?nOutChain :: Int) => ItsStrategy -> ItsStrategy
 -- withChaining st = es $ try st .>>> (exhaustivelyN ?nInChain innerChaining <|> exhaustivelyN ?nOutChain outerChaining)
 afterChaining st = (
-  te (innerChainingSingle .>>> try unreachableRules) 
-  .>>> te (innerChainingAll .>>> try unreachableRules))
+  try (exhaustivelyN 5 (innerChainingAll .>>> try unreachableRules)))
   .>>> try st
 
