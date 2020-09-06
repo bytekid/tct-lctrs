@@ -22,23 +22,3 @@ extra-deps:
   commit: 49a9700fe78d2dce0ff016c35c41dcbeb78cb11b
 - git: https://github.com/ComputationWithBoundedResources/slogic
   commit: 1cb609cb7fac1cba186969da90157ad7d0caeeac
-#- git: https://github.com/ComputationWithBoundedResources/tct-common
-#  commit: 7dda9e986887cc45b922f7834e324517cc3d6d2f
-#- git: https://github.com/ComputationWithBoundedResources/tct-core
-#  commit: ea34d9af0a3a571f8d013d6d1e663c8f87b7f7e1
-- git: https://github.com/ComputationWithBoundedResources/tct-hoca
-  commit: 69526441ed25bbde392b9cf11073310c4ab25f69
-#- git: https://github.com/ComputationWithBoundedResources/tct-its
-#commit: 19de61bd2470df0fd43a27cc45fd963415d0d385
-
-#- git: https://github.com/ComputationWithBoundedResources/lare
-#  commit: 02d89b97d57e3a3697727e29786c56564c296fff
-#- git: https://github.com/ComputationWithBoundedResources/paicc
-#  commit: aca2a54f01d9b7118fecf91be429cae60a51d313
-
-#- set-monad-0.3.0.0
-#- git: https://github.com/ComputationWithBoundedResources/tct-jbc
-#  commit: 36b44e66ea389ff3653f4d49da6feff67471102c
-#- git: https://github.com/ComputationWithBoundedResources/jat
-#  commit: b73c93375a36eb6ccfd688fb82719dff46a1e514
-
