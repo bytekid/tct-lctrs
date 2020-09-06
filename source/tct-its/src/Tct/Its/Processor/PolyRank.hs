@@ -301,9 +301,9 @@ entscheide proc prob@Its
       inters = [ PI.interpretations ebsi `find` f | f <- funs somerules]
       coeffs = concat [ P.constantValue i : P.coefficients i | i <- inters ]
       -- SW: ensure that condition implies lhs non-negative (condition 3 in [BEFFG16, Def 3.1]) 
-      nonneg (t, cs) = (interpretLhs t) `eliminateFarkas` interpretCon cs
-      terms_somerules = [ (l, cs) | (Rule l _ cs) <- somerules ] ++ [ (r, cs) | (Rule _ rs cs) <- somerules, r <- rs ]
-
+      nonneg_lhs (Rule l _ cs) = (interpretLhs l) `eliminateFarkas` interpretCon cs
+      multi_rhs = any (\r -> length (rhs r) > 1) somerules
+      
     SMT.assert (SMT.top :: SMT.Formula Int)
     SMT.assert =<< SMT.bigAndM orderConstraint
     SMT.assert $ SMT.bigOr rulesConstraint
@@ -315,7 +315,8 @@ entscheide proc prob@Its
     -- SMT.assert =<<
     --  if withSize then return (SMT.bigAnd $ [ c SMT..>= SMT.zero | c <- coeffs])
     --  else SMT.bigAndM [] -- nonneg_lhs r | r <- someirules ] but say that vars are positive
-    SMT.assert =<< SMT.bigAndM [ nonneg t | t <- terms_somerules ]
+  
+    SMT.assert =<< SMT.bigAndM (if multi_rhs then [ nonneg_lhs r | r <- IM.elems allrules, fun (lhs r) `elem` funs somerules] else [])
 
     return $ SMT.decode (ebsi, strictVarEncoder)
 
