@@ -58,6 +58,7 @@ import qualified Tct.Its.Data.Timebounds      as TB
 import qualified Tct.Its.Data.TransitionGraph as TG
 import           Tct.Its.Data.Types
 import           Tct.Its.Data.Rule
+import           Debug.Trace
 
 
 data PropagationProcessor
@@ -326,11 +327,11 @@ chainConstraints :: Rule -> Rule -> [Constraint]
 chainConstraints ru1 ru2 = [cs1 ++ map (map (mapCon (subst r))) cs2 | r <- rhss]
   where
     Rule _ r1 cs1 = ru1
-    Rule l2 _ cs2 = rename ru1 ru2
+    (Rule l2 r2 cs2) = rename ru1 ru2
     rhss = [ r | r <- r1, fun r == fun l2 ]
     lhsvs = concatMap P.variables (args l2)
-    subst1 = M.fromList [ (v, P.variable v) | v <- S.toList $ variables ru2 ]
-    subst2 r = foldl (\m (v,p) -> M.insert v p m) subst1 (zip lhsvs (args r))
+    subst_id = M.fromList [ (v, P.variable v) | v <- S.toList $ variables (Rule l2 r2 cs2) ]
+    subst2 r = foldl (\m (v,p) -> M.insert v p m) subst_id (zip lhsvs (args r))
     subst r = (`P.substituteVariables` (subst2 r))
     mapCon f (Eq p1 p2)  = Eq (f p1) (f p2)
     mapCon f (Gte p1 p2) = Gte (f p1) (f p2)

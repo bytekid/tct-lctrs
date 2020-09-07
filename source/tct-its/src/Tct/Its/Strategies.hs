@@ -69,8 +69,8 @@ def useAT useAF =
   .>>> try unreachableRules
   .>>> try sizebounds
   -- .>>> try pathAnalysis -- FIXME: update rvgraph error; just re-compute it
-  .>>> afterChaining (
-    try simpl2
+  .>>> -- afterChaining (
+    (try simpl2
     .>>> try sizebounds
     .>>> try locationConstraints
     .>>> te constantFarkas
