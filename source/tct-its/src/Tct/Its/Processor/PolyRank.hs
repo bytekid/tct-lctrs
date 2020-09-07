@@ -316,7 +316,7 @@ entscheide proc prob@Its
     --  if withSize then return (SMT.bigAnd $ [ c SMT..>= SMT.zero | c <- coeffs])
     --  else SMT.bigAndM [] -- nonneg_lhs r | r <- someirules ] but say that vars are positive
   
-    SMT.assert =<< SMT.bigAndM (if multi_rhs then [ nonneg_lhs r | r <- IM.elems allrules, fun (lhs r) `elem` funs somerules] else [])
+    SMT.assert =<< SMT.bigAndM (if multi_rhs then trace ("multirhs " ++ show (length strictrules)) [ nonneg_lhs (irules_ prob IM.! r) | r <- strictrules] else [])
 
     return $ SMT.decode (ebsi, strictVarEncoder)
 
