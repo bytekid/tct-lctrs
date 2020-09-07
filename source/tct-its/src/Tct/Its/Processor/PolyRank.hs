@@ -314,7 +314,7 @@ entscheide proc prob@Its
     --     fix: allow non-monotonicity, but fix afterwards interpretation of term
     SMT.assert =<< SMT.bigAndM (
       -- SW: ensure that condition implies lhs non-negative (condition 3 in [BEFFG16, Def 3.1]) 
-      if not multi_rhs then [ nonneg_lhs (irules_ prob IM.! r) | r <- strictrules]
+      if not multi_rhs then [] -- nonneg_lhs (irules_ prob IM.! r) | r <- strictrules]
       -- SW the above condition does not suffice for multuple terms on rhs
       else [ nonneg_constr_term t | t <- terms_somerules ])
 
