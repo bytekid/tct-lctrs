@@ -300,9 +300,10 @@ entscheide proc prob@Its
       -- SW: monotonicity (in case of multi-term rhss, coefficients may get negative? avoid)
       inters = [ PI.interpretations ebsi `find` f | f <- funs somerules]
       coeffs = concat [ P.constantValue i : P.coefficients i | i <- inters ]
-      -- SW: ensure that condition implies lhs non-negative (condition 3 in [BEFFG16, Def 3.1]) 
-      nonneg_lhs (Rule l _ cs) = (interpretLhs l) `eliminateFarkas` interpretCon cs
+      nonneg_constr_term (l, cs) = (interpretLhs l) `eliminateFarkas` interpretCon cs
+      nonneg_lhs (Rule l _ cs) = nonneg_constr_term (l, cs)
       multi_rhs = any (\r -> length (rhs r) > 1) somerules
+      terms_somerules = [ (l, cs) | (Rule l _ cs) <- somerules ] ++ [ (r, cs) | (Rule _ rs cs) <- somerules, r <- rs ]
       
     SMT.assert (SMT.top :: SMT.Formula Int)
     SMT.assert =<< SMT.bigAndM orderConstraint
@@ -310,13 +311,12 @@ entscheide proc prob@Its
     SMT.assert $ SMT.maximize $ bigAdd [ strict i | i <- strictrules ]
     SMT.assert undefinedConstraint
     -- SW: if size bounds are used, monotonicity is required, otherwise not
-    --     necessarily but lhss must be interpreted non-negative wrt constraints
-    -- SW: fix: allow non-monotonicity, but fix afterwards interpretation of term
-    -- SMT.assert =<<
-    --  if withSize then return (SMT.bigAnd $ [ c SMT..>= SMT.zero | c <- coeffs])
-    --  else SMT.bigAndM [] -- nonneg_lhs r | r <- someirules ] but say that vars are positive
-  
-    SMT.assert =<< SMT.bigAndM (if multi_rhs then [ nonneg_lhs (irules_ prob IM.! r) | r <- strictrules] else [])
+    --     fix: allow non-monotonicity, but fix afterwards interpretation of term
+    SMT.assert =<< SMT.bigAndM (
+      -- SW: ensure that condition implies lhs non-negative (condition 3 in [BEFFG16, Def 3.1]) 
+      if not multi_rhs then [ nonneg_lhs (irules_ prob IM.! r) | r <- strictrules]
+      -- SW the above condition does not suffice for multuple terms on rhs
+      else [ nonneg_constr_term t | t <- terms_somerules ])
 
     return $ SMT.decode (ebsi, strictVarEncoder)
 
