@@ -158,7 +158,7 @@ def accumulate(jobs, cmphead):
   htmlprint("<html>" + style)
   htmlprint("<body><table id=\"results\">")
   toolnames = ["<th>" + t + "</th>" for t in tools]
-  htmlprint("<tr><th>&nbsp;</th><th>" + cmphead + "</th>" + reduce(operator.add, toolnames, "") + "</tr>")
+  htmlprint("<tr><th>&nbsp;</th>" + reduce(operator.add, toolnames, "") + "</tr>")
   for r in sorted(jobs, key = lambda r: r["path"]):
     name = r["path"][len("koat-evaluation/examples/"):-5] # drop .koat
     htmlprint("<tr><td>" + name + "</td>")
