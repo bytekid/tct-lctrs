@@ -195,7 +195,8 @@ sizeboundsConstr irules sbounds lbounds rvgraph scc
         idx = L.elemIndex (P.variable v) (args (lhs rl))
         rhs_v = (args r) L.!! (case idx of Just n -> n; _ ->  0)
         cs = con rl
-        bnd_ps = [ (l, r) | c <- cs, Gte l r <- c ] ++ [ (l, r) | c <- cs, Eq l r <- c ]
+        bnd_ps' = [ (l, r) | c <- cs, Gte l r <- c ] ++ [ (l, r) | c <- cs, Eq l r <- c ] ++ [ (r, l) | c <- cs, Eq l r <- c ]
+        bnd_ps = [ (l1, r2) | (l1, r1) <- bnd_ps', (l2, r2) <- bnd_ps', r1 == l2 ] ++ bnd_ps'
         bnds = [ (l, - P.constantValue r) | (l, r) <- bnd_ps, v `elem` P.variables r, all (\c -> c >= 0) (P.coefficients r)]
         pre = RVG.predecessors rvgraph rv
         all_pre_bounds = [ boundsOfVars sbs (rvRule p, rvRpos p) | p <- pre ] -- predecessor bounds
