@@ -68,14 +68,13 @@ def useAT useAF =
   .>>> try unreachableRules
   .>>> try sizebounds
   -- .>>> try pathAnalysis -- FIXME: update rvgraph error; just re-compute it
-  .>>> try st
-  .>>> afterChaining (
+  .>>> ((try (afterChaining (
     try simpl2
     .>>> try sizebounds
     .>>> try locationConstraints
     .>>> te constantFarkas
     .>>> te farkas
-    .>>> try (withProblem $ \prob -> when (hasRecPotential prob) (te combineAll) .>>> loopRecurrence))
+    .>>> try (withProblem $ \prob -> when (hasRecPotential prob) (te combineAll) .>>> loopRecurrence)))) .<||> try st)
   .>>> try st
   .>>> empty
   where
