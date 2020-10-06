@@ -69,20 +69,23 @@ def useAT useAF =
   .>>> try sizebounds
   -- .>>> try pathAnalysis -- FIXME: update rvgraph error; just re-compute it
   .>>> (
-    (afterChaining (try simpl2
-    .>>> try sizebounds
-    .>>> try locationConstraints
-    .>>> te constantFarkas
-    .>>> te farkas
-    .>>> try (withProblem $ \prob -> when (hasRecPotential prob) (te combineAll) .>>> loopRecurrence))
-  .>>> try st
-  .>>> empty) .<|> (try st .>>> empty))
+    (afterChaining chainLoops .>>> try st .>>> empty) 
+    .<|>
+    (try st .>>> (afterChaining chainLoops .>>> try st .>>> empty))
+  )
   where
     st =
       try simpl2
       .>>> te (withKnowledgePropagation farkas)
       -- .>>> te (try sizebounds .>>> withKnowledgePropagation farkas)
       .>>> te (try sizebounds .>>> usingTimebounds)
+    chainLoops =
+        try simpl2
+        .>>> try sizebounds
+        .>>> try locationConstraints
+        .>>> te constantFarkas
+        .>>> te farkas
+        .>>> try (withProblem $ \prob -> when (hasRecPotential prob) (te combineAll) .>>> loopRecurrence)
     usingTimebounds = withProblem $
       \prob -> es $ fastestN 8 [ withKnowledgePropagation (timebounds c) | c <- timeboundsCandidates (selNextSCC prob)]
 
