@@ -90,6 +90,7 @@ def compare_versions(jobs, cmphead):
   htmlcomment("lost: " + reduce(lambda p, s: s + " " + p, lost, ""))
   htmlcomment("different: " + reduce(lambda s, p: s + " " + str(p[0]) + "(" + \
     str(p[1]) + " vs " + str(p[2]) + ")", differ, ""))
+  return data
 
 
  
@@ -144,14 +145,20 @@ def check(job):
   return job
 
 def accumulate(jobs, cmphead):
+  currenthead, lasthead = get_git_heads()
+  if cmphead is None:
+    cmphead = lasthead
+  dump_json(currenthead, jobs)
+  cmpdata = compare_versions(jobs, cmphead)
+
   summary= {}
-  tools = ["TCT", "KoAT", "CoFloCo", "PUBS"]
+  tools = ["TCT", cmphead, "KoAT", "CoFloCo", "PUBS"]
   for tool in tools:
     summary[tool] = {"solved": 0, "min": 0}
   htmlprint("<html>" + style)
   htmlprint("<body><table id=\"results\">")
   toolnames = ["<th>" + t + "</th>" for t in tools]
-  htmlprint("<tr><th>&nbsp;</th>" + reduce(operator.add, toolnames, "") + "</tr>")
+  htmlprint("<tr><th>&nbsp;</th><th>" + cmphead + "</th>" + reduce(operator.add, toolnames, "") + "</tr>")
   for r in sorted(jobs, key = lambda r: r["path"]):
     name = r["path"][len("koat-evaluation/examples/"):-5] # drop .koat
     htmlprint("<tr><td>" + name + "</td>")
@@ -160,8 +167,14 @@ def accumulate(jobs, cmphead):
     degrees["TCT"] = r["degree"] if "degree" in r else None
     htmlprint("<td>" + ("?" if degrees["TCT"] is None else str(degrees["TCT"])) + "</td>")
     
+    # head to compare with
+    cmpresult = cmpdata[r["path"]]
+    degrees[cmphead] = cmpresult["degree"] if "degree" in cmpresult else None
+    cmpdegree = degrees[cmphead]
+    htmlprint("<td>" + ("?" if cmpdegree is None else str(cmpdegree)) + "</td>")
+
     # other tools
-    for tool in tools[1:]:
+    for tool in tools[2:]:
       tresult = results[tool][name]
       degrees[tool] = tresult["degree"] if "degree" in tresult else None
       htmlprint("<td>" + ("?" if degrees[tool] is None else str(degrees[tool])) + "</td>")
@@ -178,15 +191,9 @@ def accumulate(jobs, cmphead):
   mins = ["<td>" + str(summary[t]["min"]) + "</td>" for t in tools]
   htmlprint(trsumm + "<td>minimal</td>" + reduce(operator.add, mins, "") + "</tr>")
 
-  [currenthead, lasthead] = get_git_heads()
-  if cmphead is None:
-    cmphead = lasthead
-  compare_versions(jobs, cmphead)
-
   htmlprint("</table></body></html>")
 
   # dump results into json
-  dump_json(currenthead, jobs)
   dump_html(currenthead)
 
   return summary

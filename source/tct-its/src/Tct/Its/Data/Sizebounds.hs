@@ -178,6 +178,7 @@ propagate irules sbounds rvgraph = foldl check sbounds (M.keys sbounds)
       if pre == [] || idxm == Nothing || (rv `elem` pre && rv_modified) then sbs
       else M.insert rv max_bound sbs
 
+-- extract more size bounds from constraints
 sizeboundsConstr :: Rules -> Sizebounds -> LocalSizebounds -> RVGraph -> [RV] -> Sizebounds
 sizeboundsConstr irules sbounds lbounds rvgraph scc 
   | not (null unbounds)                                         = sbounds
@@ -197,12 +198,12 @@ sizeboundsConstr irules sbounds lbounds rvgraph scc
         bnd_ps = [ (l, r) | c <- cs, Gte l r <- c ] ++ [ (l, r) | c <- cs, Eq l r <- c ]
         bnds = [ (l, - P.constantValue r) | (l, r) <- bnd_ps, v `elem` P.variables r, all (\c -> c >= 0) (P.coefficients r)]
         pre = RVG.predecessors rvgraph rv
-        all_pre_bounds = [ boundsOfVars sbs (rvRule p, rvRpos p) | p <- pre ]
+        all_pre_bounds = [ boundsOfVars sbs (rvRule p, rvRpos p) | p <- pre ] -- predecessor bounds
         pre_bounds = foldl (M.unionWith C.maximal) (head all_pre_bounds) (tail all_pre_bounds)
 
         bnd_exprs = [ P.substituteVariables rhs_v (M.fromList [(v, add p (P.constant rconst))]) | (p, rconst) <- bnds ]
         bnd_exprsx = [ if P.constantValue (p :: P.Polynomial Int Var) <= 0 then fst (P.splitConstantValue p) else p | p <- bnd_exprs]
-        complex_bnds = [ compose (C.poly p) pre_bounds | p <- bnd_exprsx ]
+        complex_bnds = [ compose (trace ("complex sizebound " ++ show p) (C.poly p)) pre_bounds | p <- bnd_exprsx ]
         useful_bnds = [ p | p <- complex_bnds, not (C.Unknown == p) ]
       in
       if pre  == [] || length (rhs rl) > 1 || idx == Nothing || useful_bnds == [] then sbs
