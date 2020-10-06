@@ -203,7 +203,9 @@ sizeboundsConstr irules sbounds lbounds rvgraph scc
 
         bnd_exprs = [ P.substituteVariables rhs_v (M.fromList [(v, add p (P.constant rconst))]) | (p, rconst) <- bnds ]
         bnd_exprsx = [ if P.constantValue (p :: P.Polynomial Int Var) <= 0 then fst (P.splitConstantValue p) else p | p <- bnd_exprs]
-        complex_bnds = [ compose (trace ("complex sizebound " ++ show p) (C.poly p)) pre_bounds | p <- bnd_exprsx ]
+        -- filter out bounds by variables that occur only in constraint, hence do not have size bound
+        def_bnd_exprs = [p | p <- bnd_exprsx, all (\v -> M.member v pre_bounds) (P.variables p) ]
+        complex_bnds = [ compose (C.poly p) pre_bounds | p <- def_bnd_exprs ]
         useful_bnds = [ p | p <- complex_bnds, not (C.Unknown == p) ]
       in
       if pre  == [] || length (rhs rl) > 1 || idx == Nothing || useful_bnds == [] then sbs
