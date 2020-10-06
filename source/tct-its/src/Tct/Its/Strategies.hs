@@ -63,7 +63,6 @@ def useAT useAF =
 
   wellformed
   .>>> try simpl1
-  -- .>>> te farkas
   .>>> try (when ?useAT (withProblem (transitionAbstraction . monotonicityPredicates)))
   .>>> try (when ?useAF (withProblem (argumentFilter . unusedFilter)))
   .>>> try unreachableRules
@@ -78,7 +77,6 @@ def useAT useAF =
     .>>> te farkas
     .>>> try (withProblem $ \prob -> when (hasRecPotential prob) (te combineAll) .>>> loopRecurrence))
   .>>> try st
-  -- .>>> withChaining st
   .>>> empty
   where
     st =
