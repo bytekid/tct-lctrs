@@ -90,7 +90,7 @@ def compare_versions(jobs, cmphead):
   htmlcomment("lost: " + reduce(lambda p, s: s + " " + p, lost, ""))
   htmlcomment("different: " + reduce(lambda s, p: s + " " + str(p[0]) + "(" + \
     str(p[1]) + " vs " + str(p[2]) + ")", differ, ""))
-  return data
+  return cmpdata
 
 
  
