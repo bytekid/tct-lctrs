@@ -72,7 +72,7 @@ def useAT useAF =
     (afterChaining chainLoops .>>> try st .>>> empty) 
     .<|>
     (try st .>>> (afterChaining chainLoops .>>> try st .>>> empty))
-  )
+    )
   where
     st =
       try simpl2
