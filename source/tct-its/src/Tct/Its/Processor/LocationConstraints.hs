@@ -78,7 +78,7 @@ updateLocationConstraints prob = do
         rl2 = irules_ prob IM.! rid2
         pres = [ (src,tgt) | (src,tgt) <- Gr.lpre (tgraph_ prob) rid2, src /= rid2 ] -- predecessors
         has_single_rhs rid1 = length (rhs (irules_ prob IM.! rid1)) == 1
-        has_conj_constr rid1 = True -- length (con (irules_ prob IM.! rid1)) == 1
+        has_conj_constr rid1 = length (con (irules_ prob IM.! rid1)) > 0
         do_consider rid1 = has_single_rhs rid1 && has_conj_constr rid1
         lcs0 = case locConstraints_ prob of {Just lcs -> lcs; _ -> M.empty} 
         prop_constr rid1 = let
