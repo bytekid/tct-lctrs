@@ -126,18 +126,18 @@ checkInvariant prob rids inv = foldM (\b rl -> if not b then return False else c
   where
     checkForRule rid = let
         rl = irules_ prob IM.! rid
-        has_single_rhs rid1 = length (rhs (irules_ prob IM.! rid1)) == 1
+        has_single_rhs = length (rhs (irules_ prob IM.! rid)) == 1
         update = M.fromList (zip (map tovar (args (lhs rl))) (args (head (rhs rl))))
         assumption = [inv] : (lcs_lookup rid) ++ (con rl)
         consequence = [[subst update inv]]
       in
-      if implies assumption consequence then return True
+      if not has_single_rhs then return False
+      else if implies assumption consequence then return True
       else impliesSMT (toSMT assumption) (toSMT consequence) >>= \b -> return (trace (if b then (" " ++ show rid ++ " ok") else (" " ++ show rid ++ " fails " ++ show inv)) b)
     lcs = case locConstraints_ prob of {Just lcsm -> lcsm; _ -> M.empty}
     lcs_lookup rid = case lcs M.!? rid of {Just c -> c; _ -> []}
     subst s (Gte p q) = Gte (P.substituteVariables p s) (P.substituteVariables q s)
     subst s (Eq p q) = Eq (P.substituteVariables p s) (P.substituteVariables q s)
-    loc_constr id = case lcs M.!? id of {Just c -> c; _ -> []}
     tovar p = case P.variables p of {[x] -> x; xs -> head (trace "non-var lhs" xs)}
     toSMT c = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) c)
 
@@ -147,12 +147,12 @@ findInvariantsSCC prob scc = do
   return (prob { locConstraints_ = Just (foldl add lcs0 invs) })
   where
     lcs0 = case locConstraints_ prob of {Just lcsm -> lcsm; _ -> M.empty}
-    rules = IM.elems (irules_ prob)
-    invCandidates = L.nub (concat $ concat (map con rules))
+    allrules = IM.elems (irules_ prob)
+    invCandidates = L.nub (concat $ concat (map con allrules))
     pres = [ src | rid <- scc, (src,_) <- Gr.lpre (tgraph_ prob) rid, not (rid `elem` scc) ]
     valid inv = checkInvariant prob (pres ++ scc) (trace ("checking for SCC " ++ show scc ++ " " ++ show inv) inv)
-    loc_constr id = case lcs0 M.!? id of {Just c -> c; _ -> []}
-    add lcs inv = foldl (\lcs rid -> M.insert rid ([inv] : (loc_constr rid)) lcs) lcs scc 
+    loc_constr rid = case lcs0 M.!? rid of {Just c -> c; _ -> []}
+    add lcs inv = foldl (\lcsm rid -> M.insert rid ([inv] : (loc_constr rid)) lcsm) lcs scc 
 
 findInvariants :: Its -> T.TctM Its
 findInvariants prob =
