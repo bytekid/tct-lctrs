@@ -11,6 +11,7 @@ import           Data.Maybe                         (fromMaybe)
 import qualified Data.List                    as L  (nub)
 import qualified Data.Set                     as S  (fromList, isSubsetOf) 
 import qualified Data.Graph.Inductive         as Gr (lpre)
+import           Tct.Its.Data.TransitionGraph       (nonTrivialSCCs)
 
 import qualified Tct.Core.Common.Pretty       as PP
 import qualified Tct.Core.Common.Xml          as Xml
@@ -23,7 +24,7 @@ import           Tct.Its.Data.Problem
 import           Tct.Its.Data.Rule
 import qualified Tct.Common.Polynomial        as P
 import qualified Tct.Common.SMT as SMT
---import           Debug.Trace
+-- import           Debug.Trace
 trace _ x = x
 
 data LocationConstraintProcessor = LocationConstraintsProc deriving Show
@@ -56,9 +57,10 @@ instance T.Processor LocationConstraintProcessor where
   execute LocationConstraintsProc prob | isClosed prob = closedProof prob
   execute LocationConstraintsProc prob = do
     nprob <- setLocationConstraints prob
-    let pproof = LocationConstraintsProof (error "proc locconstr" `fromMaybe` locConstraints_ nprob)
-    if locConstraints_ prob /= locConstraints_ nprob
-      then progress (Progress nprob) (Applicable pproof)
+    nnprob <- findInvariants nprob
+    let pproof = LocationConstraintsProof (error "proc locconstr" `fromMaybe` locConstraints_ nnprob)
+    if locConstraints_ prob /= locConstraints_ (trace "after locconstr" nnprob)
+      then progress (Progress nnprob) (Applicable pproof)
       else progress NoProgress (Applicable LocationConstraintsFail)
 
 locationConstraints :: ItsStrategy
@@ -95,7 +97,7 @@ updateLocationConstraints prob = do
             rule_constr = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) (trace ("check whether " ++ show (lconstr ++ (con rl)) ++ " implies " ++ show constr) (lconstr ++ (con rl))))
             other_constr = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) constr)
           in
-          isUNSAT (rule_constr SMT..&& SMT.bnot other_constr)
+          impliesSMT rule_constr other_constr
       in
       case (trace ("rule " ++ show rid2 ++ " has predecessors: " ++ show pres) pres) of -- only for single predecessor
         [(p, _)] | do_consider p -> return (prop_constr p)
@@ -108,10 +110,50 @@ updateLocationConstraints prob = do
           if trace ("implies "++ show b1 ++ ", " ++ show b2) b1 then return qc else if b2 then return pc else return []
         _ -> return []
 
-isUNSAT :: SMT.Formula Var -> T.TctM Bool
-isUNSAT f = do
+impliesSMT :: SMT.Formula Var -> SMT.Formula Var -> T.TctM Bool
+impliesSMT f g = do
   s :: SMT.Result () <- SMT.smtSolveSt SMT.yices $ do
     SMT.setLogic SMT.QF_NIA
-    SMT.assert f
+    SMT.assert (f SMT..&& SMT.bnot g)
     return $ SMT.decode ()
   return $ not $ SMT.isSat s
+
+implies :: Constraint -> Constraint -> Bool
+implies f g = all (`elem` f) g
+
+checkInvariant :: Its -> [RuleId] -> Atom -> T.TctM Bool
+checkInvariant prob rids inv = foldM (\b rl -> if not b then return False else checkForRule rl) True rids
+  where
+    checkForRule rid = let
+        rl = irules_ prob IM.! rid
+        has_single_rhs rid1 = length (rhs (irules_ prob IM.! rid1)) == 1
+        update = M.fromList (zip (map tovar (args (lhs rl))) (args (head (rhs rl))))
+        assumption = [inv] : (lcs_lookup rid) ++ (con rl)
+        consequence = [[subst update inv]]
+      in
+      if implies assumption consequence then return True
+      else impliesSMT (toSMT assumption) (toSMT consequence) >>= \b -> return (trace (if b then (" " ++ show rid ++ " ok") else (" " ++ show rid ++ " fails " ++ show inv)) b)
+    lcs = case locConstraints_ prob of {Just lcsm -> lcsm; _ -> M.empty}
+    lcs_lookup rid = case lcs M.!? rid of {Just c -> c; _ -> []}
+    subst s (Gte p q) = Gte (P.substituteVariables p s) (P.substituteVariables q s)
+    subst s (Eq p q) = Eq (P.substituteVariables p s) (P.substituteVariables q s)
+    loc_constr id = case lcs M.!? id of {Just c -> c; _ -> []}
+    tovar p = case P.variables p of {[x] -> x; xs -> head (trace "non-var lhs" xs)}
+    toSMT c = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) c)
+
+findInvariantsSCC :: Its -> [RuleId] -> T.TctM Its
+findInvariantsSCC prob scc = do
+  invs <- filterM valid invCandidates
+  return (prob { locConstraints_ = Just (foldl add lcs0 invs) })
+  where
+    lcs0 = case locConstraints_ prob of {Just lcsm -> lcsm; _ -> M.empty}
+    rules = IM.elems (irules_ prob)
+    invCandidates = L.nub (concat $ concat (map con rules))
+    pres = [ src | rid <- scc, (src,_) <- Gr.lpre (tgraph_ prob) rid, not (rid `elem` scc) ]
+    valid inv = checkInvariant prob (pres ++ scc) (trace ("checking for SCC " ++ show scc ++ " " ++ show inv) inv)
+    loc_constr id = case lcs0 M.!? id of {Just c -> c; _ -> []}
+    add lcs inv = foldl (\lcs rid -> M.insert rid ([inv] : (loc_constr rid)) lcs) lcs scc 
+
+findInvariants :: Its -> T.TctM Its
+findInvariants prob =
+  foldM findInvariantsSCC prob (nonTrivialSCCs (tgraph_ prob))
