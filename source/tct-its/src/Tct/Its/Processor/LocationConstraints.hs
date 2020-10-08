@@ -165,4 +165,5 @@ findInvariantsSCC prob scc = do
 
 findInvariants :: Its -> T.TctM Its
 findInvariants prob =
-  foldM findInvariantsSCC prob (nonTrivialSCCs (tgraph_ prob))
+  if (rulesIds (irules_ prob)) > 20 then return prob
+  else foldM findInvariantsSCC prob (nonTrivialSCCs (tgraph_ prob))
