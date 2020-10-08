@@ -99,7 +99,7 @@ updateLocationConstraints prob = do
           in
           impliesSMT rule_constr other_constr
       in
-      case (trace ("rule " ++ show rid2 ++ " has predecessors: " ++ show pres) pres) of -- only for single predecessor
+      case pres of
         [(p, _)] | do_consider p -> return (prop_constr p)
         [(p, _), (q, _)] | do_consider p && do_consider q -> do
           let
