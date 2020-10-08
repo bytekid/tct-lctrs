@@ -68,10 +68,11 @@ def useAT useAF =
   .>>> try unreachableRules
   .>>> try sizebounds
   -- .>>> try pathAnalysis -- FIXME: update rvgraph error; just re-compute it
+  .>>> st
   .>>> (
     (afterChaining chainLoops .>>> try st .>>> empty) 
-    .<|>
-    (try st .>>> (afterChaining chainLoops .>>> try st .>>> empty))
+    -- .<|>
+    -- (try st .>>> (afterChaining chainLoops .>>> try st .>>> empty))
     )
   where
     st =

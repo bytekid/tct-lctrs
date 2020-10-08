@@ -61,7 +61,7 @@ smtSolveTctM p st = do
 -- | Default arguments. Needed to get things running.
 minismtArgs, yicesArgs, z3Args :: Args
 minismtArgs = ["-m", "-v2"]
-yicesArgs   = ["-t", "10"]
+yicesArgs   = ["-t", "60"]
 z3Args      = ["-smt2"]
 
 gSolver :: Cmd -> Args -> (t -> DiffFormat) -> (String -> Result v) -> t -> T.TctM (Result v)

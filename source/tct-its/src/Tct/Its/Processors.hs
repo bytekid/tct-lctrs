@@ -9,6 +9,7 @@ import Tct.Its.Processor.LoopRecurrence                 as M
 import Tct.Its.Processor.LocationConstraints            as M
 import Tct.Its.Processor.PathAnalysis                   as M
 import Tct.Its.Processor.PolyRank                       as M
+import Tct.Its.Processor.RestrictVars                   as M
 import Tct.Its.Processor.Simplification                 as M
 import Tct.Its.Processor.Sizebounds                     as M
 import Tct.Its.Processor.TransitionPredicateAbstraction as M
