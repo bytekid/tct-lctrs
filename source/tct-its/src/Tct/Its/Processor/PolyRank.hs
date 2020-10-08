@@ -68,6 +68,7 @@ import qualified Data.Map.Strict                     as M
 import qualified Data.IntMap.Strict                     as IM
 import qualified Data.Set as S 
 import qualified Data.Traversable                    as T (mapM)
+import           Data.Maybe                       (isJust)
 
 import           Tct.Core.Common.Error               (throwError)
 import qualified Tct.Core.Common.Pretty              as PP
@@ -104,7 +105,7 @@ constantFarkas :: ItsStrategy
 constantFarkas = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Constant }
 
 timebounds :: [RuleId] -> ItsStrategy
-timebounds rs = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Linear, withSizebounds = rs }
+timebounds rs = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Linear, withSizebounds = (trace ("") rs) }
 
 timeboundsCandidates :: [RuleId] -> [[RuleId]]
 timeboundsCandidates = L.reverse . (L.sortOn length) . tail . L.subsequences -- tail drops [], longer ones first
@@ -196,7 +197,7 @@ instance T.Processor PolyRankProcessor where
   -- SW: FIXME better? if closedProof returned, no further processors are applied
   execute _ prob | isClosed prob = progress NoProgress (Inapplicable "closed") --closedProof prob 
   execute p prob
-    | not (null $ withSizebounds p) && not (sizeIsDefined prob) 
+    | not (null $ withSizebounds p) && not (isJust (sizebounds_ prob)) -- sizeIsDefined prob)  
         = progress NoProgress (Inapplicable "Sizebounds not initialised.")
     | otherwise = do
         res  <- entscheide p prob

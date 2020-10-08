@@ -88,7 +88,7 @@ def useAT useAF =
         .>>> te farkas
         .>>> try (withProblem $ \prob -> when (hasRecPotential prob) (te combineAll) .>>> loopRecurrence)
     usingTimebounds = withProblem $
-      \prob -> es $ fastestN 8 [ withKnowledgePropagation (timebounds c) | c <- timeboundsCandidates (selNextSCC prob)]
+      \prob -> es $ fastestN 8 [ withKnowledgePropagation (timebounds  c) | c <- timeboundsCandidates (selNextSCC prob)]
 
 -- FIXME: boundtrivialsccs is not always 1 in the recursive case; take max label
 simpl1 :: ItsStrategy
