@@ -164,6 +164,6 @@ findInvariantsSCC prob scc = do
     add lcs inv = foldl (\lcsm rid -> M.insert rid ([inv] : (loc_constr rid)) lcsm) lcs scc 
 
 findInvariants :: Its -> T.TctM Its
-findInvariants prob =
-  if length (rulesIds (irules_ prob)) > 21 then return prob
-  else foldM findInvariantsSCC prob (nonTrivialSCCs (tgraph_ prob))
+findInvariants prob = return prob
+  -- if length (rulesIds (irules_ prob)) > 21 then return prob
+  -- else foldM findInvariantsSCC prob (nonTrivialSCCs (tgraph_ prob))
