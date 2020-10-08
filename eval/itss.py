@@ -154,7 +154,7 @@ def accumulate(jobs, cmphead):
   summary= {}
   tools = ["TCT", cmphead, "KoAT", "CoFloCo", "PUBS"]
   for tool in tools:
-    summary[tool] = {"solved": 0, "min": 0}
+    summary[tool] = {"solved": 0, "min": 0, "const": 0, "lin": 0, "quad": 0, "cub": 0, "log": 0, "exp": 0}
   htmlprint("<html>" + style)
   htmlprint("<body><table id=\"results\">")
   toolnames = ["<th>" + t + "</th>" for t in tools]
