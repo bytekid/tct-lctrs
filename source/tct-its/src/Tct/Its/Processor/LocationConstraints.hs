@@ -24,8 +24,8 @@ import           Tct.Its.Data.Problem
 import           Tct.Its.Data.Rule
 import qualified Tct.Common.Polynomial        as P
 import qualified Tct.Common.SMT as SMT
--- import           Debug.Trace
-trace _ x = x
+import           Debug.Trace
+-- trace _ x = x
 
 data LocationConstraintProcessor = LocationConstraintsProc deriving Show
 
@@ -91,7 +91,8 @@ updateLocationConstraints prob = do
             vars c = S.fromList (concatMap P.variables (polys c))
           in
           [[ c | c <- head (con rl1), vars c `S.isSubsetOf` unchanged ]]
-        impliesConstr rid constr = let
+        impliesConstr rid constr =
+          let
             rl = irules_ prob IM.! rid
             lconstr = case lcs0 M.!? rid of {Just c -> c; _ -> []} 
             rule_constr = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) (lconstr ++ (con rl)))
@@ -107,16 +108,20 @@ updateLocationConstraints prob = do
             qc = prop_constr q
           b1 <- if qc == [[]] then return False else impliesConstr p qc
           b2 <- if pc == [[]] then return False else impliesConstr q pc
-          if trace (if b1 || b2 then show rid2 ++ "implies "++ show b1 ++ ":" ++ show qc ++ ", " ++ show b2 ++ ":" ++ show pc else "") b1 then return qc else if b2 then return pc else return []
+          if b1 then return qc else if b2 then return pc else return []
         _ -> return []
 
 impliesSMT :: SMT.Formula Var -> SMT.Formula Var -> T.TctM Bool
 impliesSMT f g = do
-  s :: SMT.Result () <- SMT.smtSolveSt SMT.yices $ do
+  s1 :: SMT.Result () <- SMT.smtSolveSt SMT.yices $ do
+    SMT.setLogic SMT.QF_NIA
+    SMT.assert g
+    return $ SMT.decode ()
+  s2 :: SMT.Result () <- SMT.smtSolveSt SMT.yices $ do
     SMT.setLogic SMT.QF_NIA
     SMT.assert (f SMT..&& SMT.bnot g)
     return $ SMT.decode ()
-  return $ not $ SMT.isSat s
+  return (SMT.isSat s1 && not (SMT.isSat s2))
 
 implies :: Constraint -> Constraint -> Bool
 implies f g = all (`elem` f) g
@@ -135,7 +140,7 @@ checkCondition useAssumption prob rids inv =
       in
       if not has_single_rhs then return False
       else if implies assumption consequence then return True
-      else impliesSMT (toSMT assumption) (toSMT consequence) >>= \b -> return (trace (if b then (" " ++ show rid ++ " ok") else (" " ++ show rid ++ " fails " ++ show inv)) b)
+      else impliesSMT (toSMT assumption) (toSMT consequence) >>= \b -> return b
     lcs = case locConstraints_ prob of {Just lcsm -> lcsm; _ -> M.empty}
     lcs_lookup rid = case lcs M.!? rid of {Just c -> c; _ -> []}
     subst s (Gte p q) = Gte (P.substituteVariables p s) (P.substituteVariables q s)
