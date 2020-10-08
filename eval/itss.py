@@ -128,6 +128,10 @@ def check(job):
       ("log(n)", .5),
       ("n^3", 3.),
       ("n^4", 4.),
+      ("n^5", 5.),
+      ("n^6", 6.),
+      ("n^7", 7.),
+      ("n^8", 8.),
     ]
     degrees = dict(degreestuples)
     degree = 666
