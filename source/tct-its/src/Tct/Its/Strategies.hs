@@ -94,6 +94,7 @@ def useAT useAF =
 simpl1 :: ItsStrategy
 simpl1 = force $
   try boundTrivialSCCs
+  .>>> try restrictVars
   .>>> try unsatRules
 
 simpl2 :: ItsStrategy

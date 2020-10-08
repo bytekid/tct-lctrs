@@ -71,6 +71,7 @@ Library
     Tct.Its.Processor.LoopRecurrence
     Tct.Its.Processor.PathAnalysis
     Tct.Its.Processor.TransitionPredicateAbstraction
+    Tct.Its.Processor.RestrictVars
     Tct.Its.Processor.PolyRank
     Tct.Its.Processor.Simplification
     Tct.Its.Processor.Sizebounds

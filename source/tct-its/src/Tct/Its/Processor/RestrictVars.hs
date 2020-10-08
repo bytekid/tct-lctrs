@@ -1,5 +1,5 @@
 module Tct.Its.Processor.RestrictVars
-  ( restrict
+  ( restrictVars
   ) where
 
 import           Control.Monad
@@ -24,7 +24,7 @@ import qualified Tct.Common.Polynomial        as P
 import           Debug.Trace
 
 
-data RestrictVarsProcessor = RestrictVarsProcessor [RuleId]
+data RestrictVarsProcessor = RestrictVarsProcessor
   deriving Show
 
 data RestrictVarsProof
@@ -51,7 +51,7 @@ instance T.Processor RestrictVarsProcessor where
   type Out RestrictVarsProcessor         = Its
   type Forking RestrictVarsProcessor     = T.Optional T.Id
 
-  execute (RestrictVarsProcessor choice) prob =
+  execute RestrictVarsProcessor prob =
     case restrict prob of
       Nothing              -> progress NoProgress (Applicable NoRestrictVarsProof)
       Just (nprob, pproof) -> progress (Progress nprob) (Applicable pproof)
@@ -86,4 +86,7 @@ restrict prob =
     nprob = initialise ([fun (startterm_ prob)], vars, newrules)
   in
   if not same_vars || removedvars == [] then Nothing
-  else Just (nprob, RestrictVarsProof (map snd removedvars))
+  else Just (nprob, RestrictVarsProof (map snd (trace ("remove " ++ show removedvars) removedvars)))
+
+restrictVars :: ItsStrategy
+restrictVars = T.Apply RestrictVarsProcessor
