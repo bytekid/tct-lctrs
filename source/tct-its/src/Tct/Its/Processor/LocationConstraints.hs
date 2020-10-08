@@ -94,7 +94,7 @@ updateLocationConstraints prob = do
         impliesConstr rid constr = let
             rl = irules_ prob IM.! rid
             lconstr = case lcs0 M.!? rid of {Just c -> c; _ -> []} 
-            rule_constr = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) (trace ("check whether " ++ show (lconstr ++ (con rl)) ++ " implies " ++ show constr) (lconstr ++ (con rl))))
+            rule_constr = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) (lconstr ++ (con rl)))
             other_constr = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) constr)
           in
           impliesSMT rule_constr other_constr
@@ -107,7 +107,7 @@ updateLocationConstraints prob = do
             qc = prop_constr q
           b1 <- if qc == [[]] then return False else impliesConstr p qc
           b2 <- if pc == [[]] then return False else impliesConstr q pc
-          if trace ("implies "++ show b1 ++ ", " ++ show b2) b1 then return qc else if b2 then return pc else return []
+          if trace (if b1 || b2 then show rid2 ++ "implies "++ show b1 ++ ":" ++ show qc ++ ", " ++ show b2 ++ ":" ++ show pc else "") b1 then return qc else if b2 then return pc else return []
         _ -> return []
 
 impliesSMT :: SMT.Formula Var -> SMT.Formula Var -> T.TctM Bool
@@ -121,14 +121,16 @@ impliesSMT f g = do
 implies :: Constraint -> Constraint -> Bool
 implies f g = all (`elem` f) g
 
-checkInvariant :: Its -> [RuleId] -> Atom -> T.TctM Bool
-checkInvariant prob rids inv = foldM (\b rl -> if not b then return False else checkForRule rl) True rids
+checkCondition :: Bool -> Its -> [RuleId] -> Atom -> T.TctM Bool
+checkCondition useAssumption prob rids inv =
+  foldM (\b rl -> if not b then return False else checkForRule rl) True rids
   where
     checkForRule rid = let
         rl = irules_ prob IM.! rid
         has_single_rhs = length (rhs (irules_ prob IM.! rid)) == 1
         update = M.fromList (zip (map tovar (args (lhs rl))) (args (head (rhs rl))))
-        assumption = [inv] : (lcs_lookup rid) ++ (con rl)
+        ruleconstr = (lcs_lookup rid) ++ (con rl)
+        assumption = if useAssumption then [inv] : ruleconstr else ruleconstr
         consequence = [[subst update inv]]
       in
       if not has_single_rhs then return False
@@ -141,16 +143,23 @@ checkInvariant prob rids inv = foldM (\b rl -> if not b then return False else c
     tovar p = case P.variables p of {[x] -> x; xs -> head (trace "non-var lhs" xs)}
     toSMT c = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) c)
 
+checkSCCInvariant :: Its -> [RuleId] -> Atom -> T.TctM Bool
+checkSCCInvariant = checkCondition True
+
+checkPostCondition :: Its -> [RuleId] -> Atom -> T.TctM Bool
+checkPostCondition = checkCondition False
+
 findInvariantsSCC :: Its -> [RuleId] -> T.TctM Its
 findInvariantsSCC prob scc = do
-  invs <- filterM valid invCandidates
+  invs0 <- filterM valid invCandidates
+  invs <- return [trace ("adding for SCC " ++ show scc ++ " " ++ show inv) inv | inv <- invs0]
   return (prob { locConstraints_ = Just (foldl add lcs0 invs) })
   where
     lcs0 = case locConstraints_ prob of {Just lcsm -> lcsm; _ -> M.empty}
     allrules = IM.elems (irules_ prob)
     invCandidates = L.nub (concat $ concat (map con allrules))
-    pres = [ src | rid <- scc, (src,_) <- Gr.lpre (tgraph_ prob) rid, not (rid `elem` scc) ]
-    valid inv = checkInvariant prob (pres ++ scc) (trace ("checking for SCC " ++ show scc ++ " " ++ show inv) inv)
+    pres = [ src | rid <- scc, (src,_) <- Gr.lpre (tgraph_ prob) rid, not (src `elem` scc) ]
+    valid inv = checkPostCondition prob pres inv >>= \b1 -> checkSCCInvariant prob scc inv >>= \b2 -> return (b1 && b2) 
     loc_constr rid = case lcs0 M.!? rid of {Just c -> c; _ -> []}
     add lcs inv = foldl (\lcsm rid -> M.insert rid ([inv] : (loc_constr rid)) lcsm) lcs scc 
 
