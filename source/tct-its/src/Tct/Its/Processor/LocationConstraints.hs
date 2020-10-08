@@ -59,7 +59,7 @@ instance T.Processor LocationConstraintProcessor where
     nprob <- setLocationConstraints prob
     nnprob <- findInvariants nprob
     let pproof = LocationConstraintsProof (error "proc locconstr" `fromMaybe` locConstraints_ nnprob)
-    if locConstraints_ prob /= locConstraints_ (trace "after locconstr" nnprob)
+    if locConstraints_ prob /= locConstraints_ nnprob
       then progress (Progress nnprob) (Applicable pproof)
       else progress NoProgress (Applicable LocationConstraintsFail)
 

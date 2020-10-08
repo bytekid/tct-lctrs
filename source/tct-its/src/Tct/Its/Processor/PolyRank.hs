@@ -105,7 +105,7 @@ constantFarkas :: ItsStrategy
 constantFarkas = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Constant }
 
 timebounds :: [RuleId] -> ItsStrategy
-timebounds rs = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Linear, withSizebounds = (trace ("") rs) }
+timebounds rs = T.Apply polyRankProcessor { useFarkas = True, shape = PI.Linear, withSizebounds = rs }
 
 timeboundsCandidates :: [RuleId] -> [[RuleId]]
 timeboundsCandidates = L.reverse . (L.sortOn length) . tail . L.subsequences -- tail drops [], longer ones first
