@@ -72,18 +72,19 @@ chainOne onlySingle prob r = do
     irules = irules_ prob
     lhsroot rid = fun (lhs (irules IM.! rid))
     -- avoid adding tuple rules
-    succs1 = [rid | rid <- succs, length (rhs (irules IM.! rid)) <= 1]
+    --     succs1 = [rid | rid <- succs, length (rhs (irules IM.! rid)) <= 1]
     -- avoid that rrule and successor have same lhs root: happens if the rhs of 
     -- rrule is also same symbol, and self-loops should not be unrolled
     -- (but if rrule has multiple rhs terms, it may be a self loop nevertheless)
-    succs2 = [rid | rid <- succs1, lhsroot rid /= lhsroot r]
+    succs2 = [rid | rid <- succs, lhsroot rid /= lhsroot r]
     succ_roots = L.nub [ fun (lhs rl) | rl <- map (\i -> irules IM.! i) succs2] -- get lhs roots
-    succs_groups = [ [rl | rl <- succs2, fun (lhs (irules IM.! rl)) == f] | f <- succ_roots ]
+    succs_groups0 = [ [rl | rl <- succs2, fun (lhs (irules IM.! rl)) == f] | f <- succ_roots ]
+    succs_groups = [g | g <- succs_groups0, all (\rid -> length (rhs (irules IM.! rid)) <= 1) g]
     succs_groups1 = [ g | g <- succs_groups, not (any (\r -> isSelfLoop (irules IM.! r)) g)]
     -- if there are multiple terms on rhs, replace only one symbol/argument
-    the_succs = if length (rhs rrule) == 1 then succs1 else head succs_groups1
+    the_succs = head succs_groups1
     long_succ = any (\rid -> length (rhs (irules IM.! rid)) > 1) the_succs
-  msuccs <- if onlySingle || succs_groups1 == [] || long_succ || the_succs == [] || length succs1 < length succs then Nothing else Just the_succs
+  msuccs <- if onlySingle || succs_groups1 == [] || long_succ || the_succs == [] then Nothing else Just the_succs
   nrules <- forM msuccs (chain rrule . (irules IM.!))
   let
     nextid = maximum (IM.keys irules) + 1
