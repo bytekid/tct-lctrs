@@ -46,8 +46,8 @@ import           Tct.Its.Data.Selector               (selNextSCCAny)
 import           Tct.Common.SMT ((.&&), (.=>), (.+), (.*), (.-))
 import qualified Tct.Common.SMT as SMT
 
---import           Debug.Trace
-trace _ expr = expr
+import           Debug.Trace
+-- trace _ expr = expr
 
 type IntPoly        = P.Polynomial Int Var
 type SMTExpr        = SMT.IExpr Var
@@ -264,16 +264,18 @@ checkDecreasePattern ((lexpr, rexprs), p) rule_constr inner_complexity = do
     else do
       let
         redexpr = mkReductExpr p (trace (" (left,right) = (" ++ show lexpr ++ ", " ++ show rexpr ++ ")") rexpr)
-        weak_decrease = lsmt SMT..>= (arith2SMT (trace ("redexpr " ++ (show redexpr)) redexpr))
+        weak_decrease = lsmt SMT..>= (arith2SMT redexpr)
         cconstr = smt_rule_constr SMT..&& SMT.bnot weak_decrease
+        no_decrease = smt_rule_constr SMT..&& SMT.bnot ((arith2SMT lexpr) SMT..> (arith2SMT rexpr))
       --constr_sat <- isSAT (smt_rule_constr SMT..&& (lsmt SMT..>= SMT.zero))
-      constr_sat <- isSAT (smt_rule_constr)
+      constr_sat <- isSAT smt_rule_constr
+      no_decrease_sat <- isSAT no_decrease
       may_be_neg <- isSAT (smt_rule_constr SMT..&& SMT.bnot (lsmt SMT..>= SMT.zero))
       -- rule constraint && no weak decrease: should be unsat, to obtain desired decrease
       no_decr_unsat <- isSAT cconstr
       let
-        res = constr_sat && not no_decr_unsat && not may_be_neg
-      return (trace ("  constr_sat " ++ show constr_sat ++ " not no_decr_unsat " ++ show (not no_decr_unsat) ++ " may be neg " ++ show may_be_neg) res)
+        res = constr_sat && not no_decr_unsat && not may_be_neg && not no_decrease_sat
+      return (trace ("  no_decrease_sat " ++ show no_decrease_sat ++ " not no_decr_unsat " ++ show (SMT.bnot (lsmt SMT..> (arith2SMT rexpr))) ++ " may be neg " ++ show may_be_neg) res)
     ) (trace ("try pattern " ++ (name p) ++ " for " ++ show lexpr ++ ": " ++ show growth_ok) growth_ok) rexprs
   return (
     if not all_decrease || rlen > branch p then Nothing
