@@ -91,7 +91,7 @@ updateLocationConstraints prob = do
             vars c = S.fromList (concatMap P.variables (polys c))
           in
           [[ c | c <- head (con rl1), vars c `S.isSubsetOf` unchanged ]]
-        implies rid constr = let
+        impliesConstr rid constr = let
             rl = irules_ prob IM.! rid
             lconstr = case lcs0 M.!? rid of {Just c -> c; _ -> []} 
             rule_constr = SMT.bigAnd (map (SMT.bigOr . (map encodeAtom)) (trace ("check whether " ++ show (lconstr ++ (con rl)) ++ " implies " ++ show constr) (lconstr ++ (con rl))))
@@ -105,8 +105,8 @@ updateLocationConstraints prob = do
           let
             pc = prop_constr p
             qc = prop_constr q
-          b1 <- if qc == [[]] then return False else implies p qc
-          b2 <- if pc == [[]] then return False else implies q pc
+          b1 <- if qc == [[]] then return False else impliesConstr p qc
+          b2 <- if pc == [[]] then return False else impliesConstr q pc
           if trace ("implies "++ show b1 ++ ", " ++ show b2) b1 then return qc else if b2 then return pc else return []
         _ -> return []
 
