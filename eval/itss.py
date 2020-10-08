@@ -118,19 +118,20 @@ def check(job):
     g = match.group(1)
     complexity = g[:-2]
     complexity_str = "O(" + complexity + ")"
-    degrees = {
-      "1" : 0.,
-      "n^1" : 1.,
-      "log(n)*n^1" : 1.5,
-      "n^2" : 2.,
-      "log(n)*n^2" : 2.5,
-      "log(n)^2*n^2" : 2.75,
-      "log(n)" : .5,
-      "n^3" : 3.,
-      "n^4" : 4.,
-    }
+    degreestuples = [
+      ("1", 0.),
+      ("n^1", 1.),
+      ("log(n)*n^1", 1.5),
+      ("n^2", 2.),
+      ("log(n)*n^2", 2.5),
+      ("log(n)^2*n^2", 2.75),
+      ("log(n)", .5),
+      ("n^3", 3.),
+      ("n^4", 4.),
+    ]
+    degrees = dict(degreestuples)
     degree = 666
-    for d in degrees.keys():
+    for (d, dd) in degreestuples:
       if complexity.startswith(d):
         degree = degrees[d]
         break
@@ -206,6 +207,8 @@ def accumulate(jobs, cmphead):
   htmlprint(trsumm + "<td>&lt;= cubic</td>" + reduce(operator.add, cubs, "") + "</tr>")
   exps = ["<td>" + str(summary[t]["exp"]) + "</td>" for t in tools]
   htmlprint(trsumm + "<td>exponential</td>" + reduce(operator.add, exps, "") + "</tr>")
+  exps = ["<td>" + str(summary[t]["log"]) + "</td>" for t in tools]
+  htmlprint(trsumm + "<td>logarithmic</td>" + reduce(operator.add, exps, "") + "</tr>")
 
   htmlprint("</table></body></html>")
 
