@@ -184,12 +184,28 @@ def accumulate(jobs, cmphead):
     for tool in tools:
       summary[tool]["solved"] += 0 if degrees[tool] is None else 1
       summary[tool]["min"] += 0 if degrees[tool] is None or degrees[tool] != m else 1
+      summary[tool]["const"] += 0 if degrees[tool] is None or degrees[tool] != 0 else 1
+      summary[tool]["lin"] += 0 if degrees[tool] is None or degrees[tool] > 1 else 1
+      summary[tool]["quad"] += 0 if degrees[tool] is None or degrees[tool] > 2 else 1
+      summary[tool]["cub"] += 0 if degrees[tool] is None or degrees[tool] > 3 else 1
+      summary[tool]["log"] += 0 if degrees[tool] is None or degrees[tool] != 0.5 else 1
+      summary[tool]["exp"] += 0 if degrees[tool] is None or degrees[tool] < 10000 else 1
 
   solveds = ["<td style=\"summary\">" + str(summary[t]["solved"]) + "</td>" for t in tools]
   trsumm= "<tr>"
   htmlprint(trsumm + "<td style=\"summary\">solved</td>" + reduce(operator.add, solveds, "") + "</tr>")
   mins = ["<td>" + str(summary[t]["min"]) + "</td>" for t in tools]
   htmlprint(trsumm + "<td>minimal</td>" + reduce(operator.add, mins, "") + "</tr>")
+  consts = ["<td>" + str(summary[t]["const"]) + "</td>" for t in tools]
+  htmlprint(trsumm + "<td>constant</td>" + reduce(operator.add, consts, "") + "</tr>")
+  lins = ["<td>" + str(summary[t]["lin"]) + "</td>" for t in tools]
+  htmlprint(trsumm + "<td>&lt;= linear</td>" + reduce(operator.add, lins, "") + "</tr>")
+  quads = ["<td>" + str(summary[t]["quad"]) + "</td>" for t in tools]
+  htmlprint(trsumm + "<td>&lt;= quadratic</td>" + reduce(operator.add, quads, "") + "</tr>")
+  cubs = ["<td>" + str(summary[t]["cub"]) + "</td>" for t in tools]
+  htmlprint(trsumm + "<td>&lt;= cubic</td>" + reduce(operator.add, cubs, "") + "</tr>")
+  exps = ["<td>" + str(summary[t]["exp"]) + "</td>" for t in tools]
+  htmlprint(trsumm + "<td>exponential</td>" + reduce(operator.add, exps, "") + "</tr>")
 
   htmlprint("</table></body></html>")
 
