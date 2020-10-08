@@ -46,8 +46,8 @@ import           Tct.Its.Data.Selector               (selNextSCCAny)
 import           Tct.Common.SMT ((.&&), (.=>), (.+), (.*), (.-))
 import qualified Tct.Common.SMT as SMT
 
-import           Debug.Trace
--- trace _ expr = expr
+-- import           Debug.Trace
+trace _ expr = expr
 
 type IntPoly        = P.Polynomial Int Var
 type SMTExpr        = SMT.IExpr Var

@@ -86,7 +86,7 @@ restrict prob =
     nprob = initialise ([fun (startterm_ prob)], vars, newrules)
   in
   if not same_vars || removedvars == [] then Nothing
-  else Just (nprob, RestrictVarsProof (map snd (trace ("remove " ++ show removedvars) removedvars)))
+  else Just (nprob, RestrictVarsProof (map snd removedvars))
 
 restrictVars :: ItsStrategy
 restrictVars = T.Apply RestrictVarsProcessor
