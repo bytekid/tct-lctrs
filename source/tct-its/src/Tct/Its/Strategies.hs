@@ -137,6 +137,6 @@ withChaining st = exhaustivelyN ?maxChain  $ try st .>>> (exhaustivelyN ?nInChai
 afterChaining :: (?maxChain :: Int, ?nInChain :: Int, ?nOutChain :: Int) => ItsStrategy -> ItsStrategy
 -- withChaining st = es $ try st .>>> (exhaustivelyN ?nInChain innerChaining <|> exhaustivelyN ?nOutChain outerChaining)
 afterChaining st = (
-  try (exhaustivelyN 5 (innerChainingAll .>>> try unreachableRules)))
+  try (exhaustivelyN 10 (innerChainingAll .>>> try unreachableRules)))
   .>>> try st
 
