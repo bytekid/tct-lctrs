@@ -180,10 +180,9 @@ loopCheck' prob rid sbounds = do
                 sol = solution solvedRecurrence
                 compl_sum = sumLoopComplexityWithSize tg [rid] tbounds sbounds sol
                 prf = LoopRecurrenceProof solvedRecurrence
-                tb = foldl (\tb r -> TB.update r compl_sum tb) tbounds (rid : reach_rls)
-                prob' = trace ("proof found: " ++ show prf) (prob { timebounds_ = tb })
+                prob' = updateTimebounds prob (IM.fromList (zip (rid : reach_rls) (repeat compl_sum)))
               in
-              return (Just (prob', prf))
+              return (Just (trace ("compl sum" ++ show compl_sum ++ " " ++ show sol) prob', trace ("proof found: " ++ show prf) prf))
             _ -> return Nothing
     _ -> return (trace "loop analysis: unsolved subproblem" Nothing) -- FIXME more than one rhs
   return res
