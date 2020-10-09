@@ -137,6 +137,8 @@ withChaining st = exhaustivelyN ?maxChain  $ try st .>>> (exhaustivelyN ?nInChai
 afterChaining :: (?maxChain :: Int, ?nInChain :: Int, ?nOutChain :: Int) => ItsStrategy -> ItsStrategy
 -- withChaining st = es $ try st .>>> (exhaustivelyN ?nInChain innerChaining <|> exhaustivelyN ?nOutChain outerChaining)
 afterChaining st = (
-  try (exhaustivelyN 15 (innerChainingAll .>>> try unreachableRules)))
+  try (withProblem $ \prob -> exhaustivelyN (bound prob) (innerChainingAll .>>> try unreachableRules)))
   .>>> try st
+  where
+    bound prob = if IM.size (irules_ prob) > 15 then trace "15" 15 else trace "10" 10
 
