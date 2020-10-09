@@ -164,8 +164,8 @@ findInvariantsSCC prob scc = do
     allrules = IM.elems (irules_ prob)
     invCandidates0 = L.nub (concat $ concat (map con allrules))
     sccvars = L.nub (concat (map (args . lhs) [ irules_ prob IM.! r | r <- scc ]))
-    invCandidates1 = [Gte x y | x <- sccvars, y <- sccvars, x /= y]
-    invCandidates = invCandidates0 ++ invCandidates1
+    -- invCandidates1 = [Gte x (P.pbigAdd [y, P.constant 1]) | x <- sccvars, y <- sccvars, x /= y]
+    invCandidates = invCandidates0 -- ++ invCandidates1
     pres = [ src | rid <- scc, (src,_) <- Gr.lpre (tgraph_ prob) rid, not (src `elem` scc) ]
     valid inv = checkPostCondition prob pres inv >>= \b1 -> checkSCCInvariant prob scc inv >>= \b2 -> return (b1 && b2) 
     loc_constr rid = case lcs0 M.!? rid of {Just c -> c; _ -> []}
