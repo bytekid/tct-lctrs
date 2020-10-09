@@ -140,5 +140,5 @@ afterChaining st = (
   try (withProblem $ \prob -> exhaustivelyN (bound prob) (innerChainingAll .>>> try unreachableRules)))
   .>>> try st
   where
-    bound prob = if IM.size (irules_ prob) > 15 then trace "15" 15 else trace "10" 10
+    bound prob = if IM.size (irules_ prob) > 12 then trace "15" 15 else trace "10" 10
 
