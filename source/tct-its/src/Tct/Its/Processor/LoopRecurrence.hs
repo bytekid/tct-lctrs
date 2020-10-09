@@ -441,7 +441,8 @@ findInitCond _ constr  =
 hasRecPotential :: Its -> Bool
 hasRecPotential prob = not (null multcons)
   where
-    multcons = [ c | Rule _ _ c <- IM.elems (irules_ prob), not (null (multcon c)) ]
+    sccrules = map (irules_ prob IM.!) (concat (TG.nonTrivialSCCs (tgraph_ prob)))
+    multcons = [ c | Rule _ _ c <- sccrules , not (null (multcon c)) ]
     multcon cc = [p | c <- cc, Gte _ p <- c, nontriv_coeffs p ] ++ [p | c <- cc, Eq q p <- c, nontriv_coeffs p || nontriv_coeffs q ]
     nontriv_coeffs p = let (q,_) = P.splitConstantValue p in not (null [c | c <- P.coefficients q, c > 1])
 
