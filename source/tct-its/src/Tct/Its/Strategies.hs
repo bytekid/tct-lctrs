@@ -68,7 +68,7 @@ def useAT useAF =
   .>>> try unreachableRules
   .>>> try sizebounds
   -- .>>> try pathAnalysis -- FIXME: update rvgraph error; just re-compute it
-  .>>> st
+  .>>> (withProblem $ \prob -> when (not (hasRecPotential prob)) st)
   .>>> (
     (afterChaining chainLoops .>>> try st .>>> empty) 
     -- .<|>
