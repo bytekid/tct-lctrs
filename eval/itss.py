@@ -61,6 +61,17 @@ def dump_json(currenthead, jobs):
   rfile = open(resdir + "/" + rname, "w")
   rfile.write(res)
 
+def get_old_tct_data():
+  global resdir
+  cmpjson = resdir + "/tctits.json"
+  if not os.path.exists(cmpjson):
+    print("no comparison result file found")
+    return
+  cmpfile = open(cmpjson, "r") 
+  cmpres = cmpfile.read()
+  cmpdata = json.loads(cmpres)
+  return cmpdata
+
 def compare_versions(jobs, cmphead):
   global resdir
   cmpjson = resdir + "/" + cmphead + ".json"
@@ -151,10 +162,12 @@ def check(job):
 
 def accumulate(jobs, cmphead):
   currenthead, lasthead = get_git_heads()
-  if cmphead is None:
-    cmphead = lasthead
   dump_json(currenthead, jobs)
-  cmpdata = compare_versions(jobs, cmphead)
+  if cmphead is None:
+    cmphead = "TCT-ITS"
+    cmpdata = get_old_tct_data()
+  else:
+    cmpdata = compare_versions(jobs, cmphead)
 
   summary= {}
   tools = ["TCT", cmphead, "KoAT", "CoFloCo", "PUBS"]
