@@ -36,10 +36,28 @@ results tr:hover {background-color: #ddd;}\
 #results td.summary { font-weight:bold }\
 </style>"
 
-resdir = "results"
+resdir  = "results"
+resdirhead = ""
 htmlresult = ""
+
+degreestuples = [
+  ("1", 0.),
+  ("n^1", 1.),
+  ("log(n)*n^1", 1.5),
+  ("n^2", 2.),
+  ("log(n)*n^2", 2.5),
+  ("log(n)^2*n^2", 2.75),
+  ("log(n)", .5),
+  ("n^3", 3.),
+  ("n^4", 4.),
+  ("n^5", 5.),
+  ("n^6", 6.),
+  ("n^7", 7.),
+  ("n^8", 8.),
+]
+
 def htmlprint(s):
-  global htmlresult
+  global htmlresult, resdir
   htmlresult = htmlresult + "\n" + s
   print(s)
 
@@ -113,7 +131,14 @@ def get_git_heads():
   htmlcomment("current git head " + currenthead)
   return [currenthead, lasthead]
 
+def outfilename(job):
+  fname = job["path"]
+  basename = fname[fname.rfind("/")+1:]
+  outfile = resdirhead + "/" + str(job["id"])+ "_" + basename.replace(".koat", ".txt")
+  return outfile
+
 def check(job):
+  global resdirhead, degreestuples
   p = job["problem"]
   fname = job["path"]
   pfile = open(fname, "r")
@@ -123,27 +148,17 @@ def check(job):
   #print(bashCommand)
   process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
   out, err = process.communicate()
+
+  outfile = outfilename(job)
+  resfile = open(outfile, "w")
+  resfile.write(str(out, 'utf-8'))
+
   regex = re.compile(r'WORST_CASE\(\?,O\(([^\s]*)')
   match = re.search(regex, str(out))  
   if match != None:
     g = match.group(1)
     complexity = g[:-2]
     complexity_str = "O(" + complexity + ")"
-    degreestuples = [
-      ("1", 0.),
-      ("n^1", 1.),
-      ("log(n)*n^1", 1.5),
-      ("n^2", 2.),
-      ("log(n)*n^2", 2.5),
-      ("log(n)^2*n^2", 2.75),
-      ("log(n)", .5),
-      ("n^3", 3.),
-      ("n^4", 4.),
-      ("n^5", 5.),
-      ("n^6", 6.),
-      ("n^7", 7.),
-      ("n^8", 8.),
-    ]
     degrees = dict(degreestuples)
     degree = 666
     for (d, dd) in degreestuples:
@@ -183,7 +198,9 @@ def accumulate(jobs, cmphead):
     degrees = {}
     # TCT
     degrees["TCT"] = r["degree"] if "degree" in r else None
-    htmlprint("<td>" + ("?" if degrees["TCT"] is None else str(degrees["TCT"])) + "</td>")
+    outfile = outfilename(r)
+    link = "<a href=\"" +outfile+ "\" target=\"_blank\">" + str(degrees["TCT"]) + "</a>" 
+    htmlprint("<td>" + ("?" if degrees["TCT"] is None else link) + "</td>")
     
     # head to compare with
     cmpresult = cmpdata[r["path"]]
@@ -244,12 +261,21 @@ if __name__ == "__main__":
 
   # collect jobs
   jobs = []
+  id = 0
   for subdir, dirs, files in os.walk(exampledir):
     for file in files:
       if file[-5:] == ".koat":
         filepath = join(subdir, file)
-        jobs.append({"problem":file, "path":filepath})
+        jobs.append({"problem":file, "path":filepath, "id":id})
+        id = id + 1
   
+  current, _ = get_git_heads()
+  resdirhead = join(resdir,current)
+  if not os.path.exists(resdir):
+    os.makedirs(resdir)
+  if not os.path.exists(resdirhead):
+    os.makedirs(resdirhead)
+
   # check in parallel
   print("<!--")
   numprocs = multiprocessing.cpu_count() - 1
