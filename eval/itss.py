@@ -278,7 +278,7 @@ if __name__ == "__main__":
 
   # check in parallel
   print("<!--")
-  numprocs = multiprocessing.cpu_count() - 1
+  numprocs = 1 # multiprocessing.cpu_count() - 1
   print("Doing " + str(len(jobs)) + " jobs with " + str(numprocs) + " procs")
   pool = multiprocessing.Pool(numprocs)
   tctresults = pool.map_async(check, jobs)
