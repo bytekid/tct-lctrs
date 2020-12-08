@@ -185,7 +185,7 @@ def accumulate(jobs, cmphead):
     cmpdata = compare_versions(jobs, cmphead)
 
   summary= {}
-  tools = ["TCT", cmphead, "KoAT", "CoFloCo", "PUBS"]
+  tools = ["TCT", cmphead, "KoAT", "CoFloCo", "PUBS", "PUBS2"]
   for tool in tools:
     summary[tool] = {"solved": 0, "min": 0, "const": 0, "lin": 0, "quad": 0, "cub": 0, "log": 0, "exp": 0}
   htmlprint("<html>" + style)
