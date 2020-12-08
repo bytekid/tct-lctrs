@@ -143,7 +143,7 @@ def check(job):
   out = str(out)
 
   if "failed" in out or "ERROR" in out or "TIMEOUT" in out:
-    print("error")
+    #print("error")
     job["errors"] = True
     return job
 
@@ -242,7 +242,7 @@ def check(job):
 
   if complexity in degreestuples:
     degree = degreestuples[complexity]
-    print(str(degree), flush=True)
+    #print(str(degree), flush=True)
     job["degree"] = degree
   else:
     print(fname)
@@ -273,17 +273,18 @@ if __name__ == "__main__":
         id = id + 1
   
   # check in parallel
-  numprocs = 3 # multiprocessing.cpu_count() - 1
+  numprocs = 9 # multiprocessing.cpu_count() - 1
   print("Doing " + str(len(jobs)) + " jobs with " + str(numprocs) + " procs")
   pool = multiprocessing.Pool(numprocs)
-  tctresults = pool.map_async(check, jobs)
+  results = pool.map_async(check, jobs)
   pool.close()
   pool.join()
   #results = [check(j) for j in jobs]
   res = {}
-  for r in results:
+  for r in results.get():
     d = {}
-    name = r["path"].replace("koat-evaluation/examples/","").replace(".ces","")
+    name = r["path"].replace("koat-evaluation/examples/","")
+    name = name.replace(".ces","")
     if "degree" in r:
       d["degree"] = r["degree"]
     if "errors" in r:
